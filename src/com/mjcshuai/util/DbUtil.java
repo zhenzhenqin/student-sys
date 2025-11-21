@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 
 public class DbUtil {
 	// 数据库连接配置
-	private static final String URL = "jdbc:mysql://localhost:3306/db_student?useUnicode=true&characterEncoding=UTF-8&useSSL=false";
+	private static final String URL = "jdbc:mysql://localhost:3306/student_sys?useUnicode=true&characterEncoding=UTF-8&useSSL=false";
 	private static final String USERNAME = "root";
 	private static final String PASSWORD = "1234";
 	private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
