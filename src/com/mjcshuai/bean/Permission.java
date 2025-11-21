@@ -1,50 +1,65 @@
 package com.mjcshuai.bean;
 
 /**
- * 权限枚举类
- * 用于定义不同用户角色的访问权限
+ * 权限枚举类 - 优化后与功能模块精准对应
  * author:mjc
  * date:2025-11-21
  */
 public enum Permission {
-    // 管理员权限 - 可以访问所有功能
+    // 管理员：所有功能权限
     ADMIN(
-        new String[]{
-            "view_students",      // 查看学生信息
-            "edit_students",      // 编辑学生信息
-            "delete_students",    // 删除学生信息
-            "view_teachers",      // 查看教师信息
-            "edit_teachers",      // 编辑教师信息
-            "delete_teachers",    // 删除教师信息
-            "view_courses",       // 查看课程信息
-            "edit_courses",       // 编辑课程信息
-            "delete_courses",     // 删除课程信息
-            "assign_teachers",    // 分配教师
-            "manage_system"       // 系统管理
-        }
+            new String[]{
+                    // 个人信息
+                    "view_own_info",      // 查看个人信息
+                    "edit_own_info",      // 编辑个人信息
+                    // 学生管理
+                    "view_all_students",  // 查看所有学生
+                    "add_student",        // 新增学生
+                    "edit_student",       // 编辑学生
+                    "delete_student",     // 删除学生
+                    // 教师管理
+                    "view_all_teachers",  // 查看所有教师
+                    "add_teacher",        // 新增教师
+                    "edit_teacher",       // 编辑教师
+                    "delete_teacher",     // 删除教师
+                    // 课程管理
+                    "view_all_courses",   // 查看所有课程
+                    "add_course",         // 新增课程
+                    "edit_course",        // 编辑课程
+                    "delete_course",      // 删除课程
+                    "assign_teacher_course", // 分配教师授课
+                    // 系统管理
+                    "manage_system"       // 系统参数设置
+            }
     ),
-    
-    // 学生权限 - 只能访问特定功能
+
+    // 学生：仅个人相关和选课功能
     STUDENT(
-        new String[]{
-            "view_own_info",      // 查看自己的信息
-            "edit_own_info",      // 编辑自己的信息
-            "view_selected_courses", // 查看已选课程
-            "select_courses",     // 选课
-            "drop_courses"        // 退课
-        }
+            new String[]{
+                    // 个人信息
+                    "view_own_info",      // 查看个人信息
+                    "edit_own_info",      // 编辑个人信息
+                    // 课程相关
+                    "view_all_courses",   // 查看所有可选课程
+                    "view_selected_courses", // 查看已选课程
+                    "select_course",      // 选课
+                    "drop_course"         // 退课
+            }
     ),
-    
-    // 教师权限 - 访问教学相关功能
+
+    // 教师：个人信息 + 授课管理 + 成绩管理
     TEACHER(
-        new String[]{
-            "view_own_info",      // 查看自己的信息
-            "edit_own_info",      // 编辑自己的信息
-            "view_teaching_courses", // 查看教授的课程
-            "view_course_students",  // 查看课程学生名单
-            "grade_students",     // 给学生打分
-            "edit_course_info"    // 编辑课程信息
-        }
+            new String[]{
+                    // 个人信息
+                    "view_own_info",      // 查看个人信息
+                    "edit_own_info",      // 编辑个人信息
+                    // 课程相关
+                    "view_teaching_courses", // 查看自己教授的课程
+                    "edit_own_course",    // 编辑自己的课程信息
+                    "view_course_students",  // 查看课程选课学生
+                    // 成绩管理
+                    "grade_students"      // 给学生打分
+            }
     );
 
     private final String[] permissions;
@@ -53,19 +68,11 @@ public enum Permission {
         this.permissions = permissions;
     }
 
-    /**
-     * 获取角色权限列表
-     * @return 权限数组
-     */
     public String[] getPermissions() {
         return permissions;
     }
 
-    /**
-     * 检查是否拥有指定权限
-     * @param permission 权限名称
-     * @return 是否拥有权限
-     */
+    // 检查是否拥有指定权限
     public boolean hasPermission(String permission) {
         for (String p : permissions) {
             if (p.equals(permission)) {

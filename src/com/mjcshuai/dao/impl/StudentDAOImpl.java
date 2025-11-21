@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudentDAOImpl implements StudentDAO {
 
@@ -42,5 +44,43 @@ public class StudentDAOImpl implements StudentDAO {
             DbUtil.closeAll(conn, pstmt, rs);
         }
         return student;
+    }
+
+    // StudentDAOImpl.java 实现类
+    @Override
+    public List<Student> findAllStudents() {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<Student> studentList = new ArrayList<>();
+
+        try {
+            conn = DbUtil.getConnection();
+            String sql = "SELECT id, name, class_id AS classId, sex, password FROM student";
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Student student = new Student();
+                student.setId(rs.getInt("id"));
+                student.setName(rs.getString("name"));
+                student.setClassId(rs.getInt("classId"));
+                student.setSex(rs.getString("sex"));
+                student.setPassword(rs.getString("password"));
+                studentList.add(student);
+            }
+        } catch (SQLException e) {
+            System.err.println("查询所有学生异常: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            DbUtil.closeAll(conn, pstmt, rs);
+        }
+        return studentList;
+    }
+
+    @Override
+    public List<Student> findStudentsByCourseId(Integer courseId) {
+        // 实现：查询课程下的学生（关联student_course表）
+        return new ArrayList<>(); // 实际需对接数据库
     }
 }
