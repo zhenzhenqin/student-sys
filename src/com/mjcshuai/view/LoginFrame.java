@@ -9,6 +9,7 @@ import com.mjcshuai.dao.TeacherDAO;
 import com.mjcshuai.dao.impl.AdminDAOImpl;
 import com.mjcshuai.dao.impl.StudentDAOImpl;
 import com.mjcshuai.dao.impl.TeacherDAOImpl;
+import com.mjcshuai.util.UserContext;
 
 import javax.swing.*;
 import java.awt.*;
@@ -132,14 +133,18 @@ public class LoginFrame extends JFrame {
                 if (loginSuccess) {
                     JOptionPane.showMessageDialog(LoginFrame.this,
                             "登录成功！欢迎" + roleName + "：" + username, "成功", JOptionPane.INFORMATION_MESSAGE);
-                    // 关闭登录窗口，后续可跳转至对应角色主界面（示例：打开管理员主界面）
+                    // 初始化用户上下文
+                    UserContext userContext = UserContext.getInstance();
+                    if (adminRadio.isSelected()) {
+                        userContext.initUser(adminDAO.login(username, password));
+                    } else if (teacherRadio.isSelected()) {
+                        userContext.initUser(teacherDAO.login(username, password));
+                    } else if (studentRadio.isSelected()) {
+                        userContext.initUser(studentDAO.login(username, password));
+                    }
+                    // 关闭登录窗口，打开主界面
                     dispose();
-                    // new AdminMainFrame().setVisible(true); // 需自行实现各角色主界面
-                } else {
-                    JOptionPane.showMessageDialog(LoginFrame.this,
-                            "用户名/密码错误或角色选择有误！", "登录失败", JOptionPane.ERROR_MESSAGE);
-                    // 清空密码框
-                    passwordField.setText("");
+                    new MainFrame().setVisible(true);
                 }
             }
         });
