@@ -8,9 +8,9 @@ import java.sql.ResultSet;
 
 public class DbUtil {
 	// 数据库连接配置
-	private static final String URL = "jdbc:mysql://localhost:3306/student_sys?useSSL=false&serverTimezone=UTC";
+	private static final String URL = "jdbc:mysql://localhost:3306/db_student?useUnicode=true&characterEncoding=UTF-8&useSSL=false";
 	private static final String USERNAME = "root";
-	private static final String PASSWORD = "password";
+	private static final String PASSWORD = "1234";
 	private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
 
 	// 使用静态块加载驱动
@@ -18,8 +18,8 @@ public class DbUtil {
 		try {
 			Class.forName(DRIVER);
 		} catch (ClassNotFoundException e) {
-			System.err.println("Database driver not found: " + e.getMessage());
-			throw new RuntimeException("Failed to load database driver", e);
+			System.err.println("数据库驱动程序未找到: " + e.getMessage());
+			throw new RuntimeException("数据库驱动程序加载失败", e);
 		}
 	}
 
@@ -32,7 +32,7 @@ public class DbUtil {
 		try {
 			return DriverManager.getConnection(URL, USERNAME, PASSWORD);
 		} catch (SQLException e) {
-			System.err.println("Failed to establish database connection: " + e.getMessage());
+			System.err.println("数据库连接异常: " + e.getMessage());
 			throw e;
 		}
 	}
@@ -46,7 +46,7 @@ public class DbUtil {
 			try {
 				conn.close();
 			} catch (SQLException e) {
-				System.err.println("Error closing connection: " + e.getMessage());
+				System.err.println("关闭数据库失败: " + e.getMessage());
 			}
 		}
 	}
@@ -60,7 +60,7 @@ public class DbUtil {
 			try {
 				stmt.close();
 			} catch (SQLException e) {
-				System.err.println("Error closing statement: " + e.getMessage());
+				System.err.println("关闭Statement失败: " + e.getMessage());
 			}
 		}
 	}
@@ -74,7 +74,7 @@ public class DbUtil {
 			try {
 				rs.close();
 			} catch (SQLException e) {
-				System.err.println("Error closing result set: " + e.getMessage());
+				System.err.println("关闭ResultSet失败: " + e.getMessage());
 			}
 		}
 	}
