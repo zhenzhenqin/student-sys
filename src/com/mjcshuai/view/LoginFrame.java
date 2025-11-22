@@ -145,6 +145,8 @@ public class LoginFrame extends JFrame {
                     // 关闭登录窗口，打开主界面
                     dispose();
                     new MainFrame().setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(LoginFrame.this, "输入的账户或密码有错误哦！", "失败", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

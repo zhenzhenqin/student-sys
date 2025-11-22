@@ -42,8 +42,8 @@ public class MainFrame extends JFrame {
         JMenuItem ownInfoItem = new JMenuItem("查看/编辑个人信息");
         JMenuItem logoutItem = new JMenuItem("退出登录");
 
-        /*ownInfoItem.addActionListener(e -> openInternalFrame(new PersonalInfoFrame(), "个人信息管理"));
-        logoutItem.addActionListener(e -> logout());*/
+        ownInfoItem.addActionListener(e -> openInternalFrame(new PersonalInfoFrame(), "个人信息管理"));
+        logoutItem.addActionListener(e -> logout());
 
         personalMenu.add(ownInfoItem);
         personalMenu.addSeparator();
