@@ -60,13 +60,13 @@ public class MainFrame extends JFrame {
         }
 
         // 3. 教师管理菜单（仅管理员可见）
-        /*if (userContext.hasPermission("view_all_teachers")) {
+        if (userContext.hasPermission("view_all_teachers")) {
             JMenu teacherMenu = new JMenu("教师管理");
             JMenuItem viewTeacherItem = new JMenuItem("查看所有教师");
             viewTeacherItem.addActionListener(e -> openInternalFrame(new TeacherManageFrame(), "教师管理"));
             teacherMenu.add(viewTeacherItem);
             menuBar.add(teacherMenu);
-        }*/
+        }
 
         // 4. 课程管理菜单（不同角色显示不同菜单项）
         /*JMenu courseMenu = new JMenu("课程管理");
