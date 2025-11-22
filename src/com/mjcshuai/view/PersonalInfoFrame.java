@@ -207,12 +207,15 @@ public class PersonalInfoFrame extends JInternalFrame {
                 userContext.initUser(updatedStudent);
                 JOptionPane.showMessageDialog(PersonalInfoFrame.this,
                         "个人信息更新成功！", "成功", JOptionPane.INFORMATION_MESSAGE);
+
+                //更新修改之后的数据 直接将修改后的参数赋给登录的参数
+                loginStudent = updatedStudent;
+
                 loadUserInfo(); // 刷新表单显示
             } else {
                 JOptionPane.showMessageDialog(PersonalInfoFrame.this,
                         "更新失败，请重试！", "失败", JOptionPane.ERROR_MESSAGE);
             }
-            loadUserInfo(); //无论是否成功都进行数据刷新
         }
 
         // 保存教师信息
@@ -251,13 +254,14 @@ public class PersonalInfoFrame extends JInternalFrame {
                 userContext.initUser(updatedTeacher);
                 JOptionPane.showMessageDialog(PersonalInfoFrame.this,
                         "个人信息更新成功！", "成功", JOptionPane.INFORMATION_MESSAGE);
+
+                loginTeacher = updatedTeacher;
+
                 loadUserInfo(); // 刷新表单显示
             } else {
                 JOptionPane.showMessageDialog(PersonalInfoFrame.this,
                         "更新失败，请重试！", "失败", JOptionPane.ERROR_MESSAGE);
             }
-
-            loadUserInfo(); //无论是否成功都进行数据刷新
         }
     }
 }
