@@ -79,8 +79,68 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
-    public List<Student> findStudentsByCourseId(Integer courseId) {
-        // 实现：查询课程下的学生（关联student_course表）
-        return new ArrayList<>(); // 实际需对接数据库
+    public boolean addStudent(Student student) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = DbUtil.getConnection();
+            String sql = "INSERT INTO student (name, class_id, sex, password) VALUES (?, ?, ?, ?)";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, student.getName());
+            pstmt.setInt(2, student.getClassId());
+            pstmt.setString(3, student.getSex());
+            pstmt.setString(4, student.getPassword());
+            return pstmt.executeUpdate() > 0; // 执行成功返回true
+        } catch (SQLException e) {
+            System.err.println("新增学生异常: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        } finally {
+            DbUtil.closeAll(conn, pstmt, null);
+        }
+    }
+
+    // 更新学生
+    @Override
+    public boolean updateStudent(Student student) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = DbUtil.getConnection();
+            String sql = "UPDATE student SET name = ?, class_id = ?, sex = ?, password = ? WHERE id = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, student.getName());
+            pstmt.setInt(2, student.getClassId());
+            pstmt.setString(3, student.getSex());
+            pstmt.setString(4, student.getPassword());
+            pstmt.setInt(5, student.getId());
+            return pstmt.executeUpdate() > 0; // 执行成功返回true
+        } catch (SQLException e) {
+            System.err.println("更新学生异常: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        } finally {
+            DbUtil.closeAll(conn, pstmt, null);
+        }
+    }
+
+    // 删除学生
+    @Override
+    public boolean deleteStudent(Integer id) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = DbUtil.getConnection();
+            String sql = "DELETE FROM student WHERE id = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, id);
+            return pstmt.executeUpdate() > 0; // 执行成功返回true
+        } catch (SQLException e) {
+            System.err.println("删除学生异常: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        } finally {
+            DbUtil.closeAll(conn, pstmt, null);
+        }
     }
 }

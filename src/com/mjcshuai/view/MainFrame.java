@@ -37,13 +37,13 @@ public class MainFrame extends JFrame {
     private void initMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
-        /*// 1. 个人中心菜单（所有角色都有）
+        // 1. 个人中心菜单（所有角色都有）
         JMenu personalMenu = new JMenu("个人中心");
         JMenuItem ownInfoItem = new JMenuItem("查看/编辑个人信息");
         JMenuItem logoutItem = new JMenuItem("退出登录");
 
-        ownInfoItem.addActionListener(e -> openInternalFrame(new PersonalInfoFrame(), "个人信息管理"));
-        logoutItem.addActionListener(e -> logout());
+        /*ownInfoItem.addActionListener(e -> openInternalFrame(new PersonalInfoFrame(), "个人信息管理"));
+        logoutItem.addActionListener(e -> logout());*/
 
         personalMenu.add(ownInfoItem);
         personalMenu.addSeparator();
@@ -60,44 +60,44 @@ public class MainFrame extends JFrame {
         }
 
         // 3. 教师管理菜单（仅管理员可见）
-        if (userContext.hasPermission("view_all_teachers")) {
+        /*if (userContext.hasPermission("view_all_teachers")) {
             JMenu teacherMenu = new JMenu("教师管理");
             JMenuItem viewTeacherItem = new JMenuItem("查看所有教师");
             viewTeacherItem.addActionListener(e -> openInternalFrame(new TeacherManageFrame(), "教师管理"));
             teacherMenu.add(viewTeacherItem);
             menuBar.add(teacherMenu);
-        }
+        }*/
 
         // 4. 课程管理菜单（不同角色显示不同菜单项）
-        JMenu courseMenu = new JMenu("课程管理");
+        /*JMenu courseMenu = new JMenu("课程管理");
         if (userContext.hasPermission("view_all_courses")) { // 管理员/学生
             JMenuItem viewAllCourseItem = new JMenuItem("查看所有课程");
             viewAllCourseItem.addActionListener(e -> openInternalFrame(new CourseManageFrame(), "课程列表"));
             courseMenu.add(viewAllCourseItem);
-        }
-        if (userContext.hasPermission("view_teaching_courses")) { // 教师
+        }*/
+        /*if (userContext.hasPermission("view_teaching_courses")) { // 教师
             JMenuItem teachingCourseItem = new JMenuItem("查看我的授课");
             teachingCourseItem.addActionListener(e -> openInternalFrame(new TeacherCourseFrame(), "我的授课"));
             courseMenu.add(teachingCourseItem);
-        }
-        if (userContext.hasPermission("view_selected_courses")) { // 学生
+        }*/
+        /*if (userContext.hasPermission("view_selected_courses")) { // 学生
             JMenuItem selectedCourseItem = new JMenuItem("查看已选课程");
             selectedCourseItem.addActionListener(e -> openInternalFrame(new StudentSelectedCourseFrame(), "已选课程"));
             courseMenu.add(selectedCourseItem);
         }
-        menuBar.add(courseMenu);
+        menuBar.add(courseMenu);*/
 
         // 5. 成绩管理菜单（仅教师可见）
-        if (userContext.hasPermission("grade_students")) {
+        /*if (userContext.hasPermission("grade_students")) {
             JMenu gradeMenu = new JMenu("成绩管理");
             JMenuItem gradeItem = new JMenuItem("给学生打分");
             gradeItem.addActionListener(e -> openInternalFrame(new GradeManageFrame(), "成绩管理"));
             gradeMenu.add(gradeItem);
             menuBar.add(gradeMenu);
-        }
+        }*/
 
         // 6. 系统管理菜单（仅管理员可见）
-        if (userContext.hasPermission("manage_system")) {
+        /*if (userContext.hasPermission("manage_system")) {
             JMenu systemMenu = new JMenu("系统管理");
             JMenuItem systemSetItem = new JMenuItem("系统参数设置");
             systemSetItem.addActionListener(e -> openInternalFrame(new SystemSetFrame(), "系统设置"));
