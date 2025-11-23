@@ -1,6 +1,6 @@
 package com.mjcshuai.dao.impl;
 
-import com.mjcshuai.bean.Teacher;
+import com.mjcshuai.model.Teacher;
 import com.mjcshuai.dao.TeacherDAO;
 import com.mjcshuai.util.DbUtil;
 

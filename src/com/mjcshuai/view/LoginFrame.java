@@ -1,8 +1,8 @@
 package com.mjcshuai.view;
 
-import com.mjcshuai.bean.Admin;
-import com.mjcshuai.bean.Student;
-import com.mjcshuai.bean.Teacher;
+import com.mjcshuai.model.Admin;
+import com.mjcshuai.model.Student;
+import com.mjcshuai.model.Teacher;
 import com.mjcshuai.dao.AdminDAO;
 import com.mjcshuai.dao.StudentDAO;
 import com.mjcshuai.dao.TeacherDAO;

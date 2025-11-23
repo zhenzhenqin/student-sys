@@ -1,9 +1,8 @@
 package com.mjcshuai.dao.impl;
 
-import com.mjcshuai.bean.Student;
+import com.mjcshuai.model.Student;
 import com.mjcshuai.dao.StudentDAO;
 import com.mjcshuai.util.DbUtil;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

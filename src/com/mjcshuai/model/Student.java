@@ -1,6 +1,4 @@
-package com.mjcshuai.bean;
-
-import lombok.Data;
+package com.mjcshuai.model;
 
 /**
  * 学生实体类

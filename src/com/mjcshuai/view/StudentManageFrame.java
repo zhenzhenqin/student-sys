@@ -1,6 +1,6 @@
 package com.mjcshuai.view;
 
-import com.mjcshuai.bean.Student;
+import com.mjcshuai.model.Student;
 import com.mjcshuai.dao.StudentDAO;
 import com.mjcshuai.dao.impl.StudentDAOImpl;
 import com.mjcshuai.util.DbUtil;

@@ -1,6 +1,6 @@
 package com.mjcshuai.dao.impl;
 
-import com.mjcshuai.bean.Admin;
+import com.mjcshuai.model.Admin;
 import com.mjcshuai.dao.AdminDAO;
 import com.mjcshuai.util.DbUtil;
 

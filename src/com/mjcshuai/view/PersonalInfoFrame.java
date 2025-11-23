@@ -1,7 +1,7 @@
 package com.mjcshuai.view;
 
-import com.mjcshuai.bean.Student;
-import com.mjcshuai.bean.Teacher;
+import com.mjcshuai.model.Student;
+import com.mjcshuai.model.Teacher;
 import com.mjcshuai.dao.StudentDAO;
 import com.mjcshuai.dao.TeacherDAO;
 import com.mjcshuai.dao.impl.StudentDAOImpl;

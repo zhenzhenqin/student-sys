@@ -1,8 +1,4 @@
-package com.mjcshuai.bean;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+package com.mjcshuai.model;
 
 /**
  * 管理员实体类

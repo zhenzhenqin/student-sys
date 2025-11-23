@@ -1,9 +1,9 @@
 package com.mjcshuai.util;
 
-import com.mjcshuai.bean.Admin;
-import com.mjcshuai.bean.Permission;
-import com.mjcshuai.bean.Student;
-import com.mjcshuai.bean.Teacher;
+import com.mjcshuai.model.Admin;
+import com.mjcshuai.model.Permission;
+import com.mjcshuai.model.Student;
+import com.mjcshuai.model.Teacher;
 
 /**
  * 用户上下文 - 保存登录后的用户信息和权限

@@ -1,6 +1,4 @@
-package com.mjcshuai.bean;
-
-import lombok.Data;
+package com.mjcshuai.model;
 
 /**
  * 选择课程实体类

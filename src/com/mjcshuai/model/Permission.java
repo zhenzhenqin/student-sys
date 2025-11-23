@@ -1,4 +1,4 @@
-package com.mjcshuai.bean;
+package com.mjcshuai.model;
 
 /**
  * 权限枚举类 - 优化后与功能模块精准对应

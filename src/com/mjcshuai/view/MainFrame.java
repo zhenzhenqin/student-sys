@@ -1,14 +1,9 @@
 package com.mjcshuai.view;
 
-import com.mjcshuai.bean.Admin;
-import com.mjcshuai.bean.Student;
-import com.mjcshuai.bean.Teacher;
 import com.mjcshuai.util.UserContext;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * 系统主界面 - 根据角色权限动态显示菜单
