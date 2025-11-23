@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
-Mon Nov 24 01:08:41 CST 2025:
+Mon Nov 24 01:09:55 CST 2025:
 正在使用类加载程序 jdk.internal.loader.ClassLoaders$AppClassLoader@36baf30c 引导数据库
-目录 D:\Code\student-sys\student_management_db 中的 Derby 版本 The Apache Software Foundation - Apache Derby - 10.17.1.0 - (1913217) 实例 a816c00e-019a-b1b0-6eb9-00000e55dff0
+目录 D:\Code\student-sys\student_management_db 中的 Derby 版本 The Apache Software Foundation - Apache Derby - 10.17.1.0 - (1913217) 实例 a816c00e-019a-b1b1-8f0e-00000e5d9b98
 已从 file:/D:/Develop/software/db-derby-10.17.1.0-bin/lib/derby.jar 加载
 java.vendor=Microsoft
 java.runtime.version=21.0.7+6-LTS
@@ -12,8 +12,8 @@ os.version=10.0
 derby.system.home=null
 数据库类加载程序已启动 - derby.database.classpath=''
 ----------------------------------------------------------------
-Mon Nov 24 01:08:41 CST 2025：正在关闭 Derby 引擎
+Mon Nov 24 01:09:55 CST 2025：正在关闭 Derby 引擎
 ----------------------------------------------------------------
-Mon Nov 24 01:08:41 CST 2025:
-正在使用类加载程序 jdk.internal.loader.ClassLoaders$AppClassLoader@36baf30c 关闭数据库目录 D:\Code\student-sys\student_management_db 上的实例 a816c00e-019a-b1b0-6eb9-00000e55dff0
+Mon Nov 24 01:09:55 CST 2025:
+正在使用类加载程序 jdk.internal.loader.ClassLoaders$AppClassLoader@36baf30c 关闭数据库目录 D:\Code\student-sys\student_management_db 上的实例 a816c00e-019a-b1b1-8f0e-00000e5d9b98
 ----------------------------------------------------------------

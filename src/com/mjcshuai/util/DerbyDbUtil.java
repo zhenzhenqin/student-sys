@@ -1,5 +1,7 @@
 package com.mjcshuai.util;
 
+import com.mjcshuai.resource.DbProperties;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,13 +13,13 @@ import java.sql.SQLException;
  */
 public class DerbyDbUtil {
     // 1. Derby 嵌入式驱动（无需启动服务）
-    private static final String DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
+    private static final String DRIVER = DbProperties.Derby_DRIVER;
     // 2. 数据库连接 URL：jdbc:derby:数据库名;create=true（不存在则自动创建）
     // 数据库文件存储在项目根目录下的 student_management_db 文件夹
-    private static final String URL = "jdbc:derby:student_management_db;create=true";
+    private static final String URL = DbProperties.Derby_URL;
     // 3. 嵌入式模式默认无需用户名密码（可留空，如需密码可添加 ;user=xxx;password=xxx）
-    private static final String USER = "";
-    private static final String PASSWORD = "";
+    private static final String USER = DbProperties.Derby_USERNAME;
+    private static final String PASSWORD = DbProperties.Derby_PASSWORD;
 
     // 静态加载驱动（JDK1.8+ 可省略，但为兼容建议保留）
     static {

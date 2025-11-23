@@ -1,22 +1,18 @@
 package com.mjcshuai.util;
 
+import com.mjcshuai.resource.DbProperties;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
 
-import static com.mjcshuai.resource.DbProperties.MySQL_URL;
-import static com.mjcshuai.resource.DbProperties.MySQL_USERNAME;
-import static com.mjcshuai.resource.DbProperties.MySQL_PASSWORD;
-import static com.mjcshuai.resource.DbProperties.MySQL_DRIVER;
-
 public class DbUtil {
 	// 数据库连接配置
-	private static final String URL = MySQL_URL;
-	private static final String USERNAME = MySQL_USERNAME;
-	private static final String PASSWORD = MySQL_PASSWORD;
-	private static final String DRIVER = MySQL_DRIVER;
+	private static final String URL = DbProperties.MySQL_URL;
+	private static final String USERNAME = DbProperties.MySQL_USERNAME;
+	private static final String PASSWORD = DbProperties.MySQL_PASSWORD;
+	private static final String DRIVER = DbProperties.MySQL_DRIVER;
 
 	// 使用静态块加载驱动
 	static {
