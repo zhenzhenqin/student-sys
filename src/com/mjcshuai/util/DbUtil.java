@@ -6,12 +6,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
 
+import static com.mjcshuai.resource.DbProperties.MySQL_URL;
+import static com.mjcshuai.resource.DbProperties.MySQL_USERNAME;
+import static com.mjcshuai.resource.DbProperties.MySQL_PASSWORD;
+import static com.mjcshuai.resource.DbProperties.MySQL_DRIVER;
+
 public class DbUtil {
 	// 数据库连接配置
-	private static final String URL = "jdbc:mysql://localhost:3306/student_sys?useUnicode=true&characterEncoding=UTF-8&useSSL=false";
-	private static final String USERNAME = "root";
-	private static final String PASSWORD = "1234";
-	private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
+	private static final String URL = MySQL_URL;
+	private static final String USERNAME = MySQL_USERNAME;
+	private static final String PASSWORD = MySQL_PASSWORD;
+	private static final String DRIVER = MySQL_DRIVER;
 
 	// 使用静态块加载驱动
 	static {

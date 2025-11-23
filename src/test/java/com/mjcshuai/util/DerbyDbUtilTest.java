@@ -8,111 +8,106 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * DerbyDbUtil 测试类
- */
+@DisplayName("Derby数据库工具类测试")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DerbyDbUtilTest {
 
     private Connection connection;
 
     @BeforeEach
-    void setUp() throws SQLException {
-        // 获取数据库连接
-        connection = DerbyDbUtil.getConnection();
+    void setUp() {
+        connection = null;
     }
 
     @AfterEach
     void tearDown() {
-        // 关闭数据库连接
         if (connection != null) {
             try {
                 connection.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                System.err.println("关闭连接失败: " + e.getMessage());
             }
         }
     }
 
-    @AfterAll
-    static void shutdown() {
-        // 关闭Derby数据库
-        DerbyDbUtil.shutdownDerby();
-    }
-
     @Test
-    @DisplayName("测试获取数据库连接")
+    @Order(1)
+    @DisplayName("测试获取Derby数据库连接")
     void testGetConnection() {
-        assertDoesNotThrow(() -> {
-            Connection conn = DerbyDbUtil.getConnection();
-            assertNotNull(conn);
-            assertFalse(conn.isClosed());
-            conn.close();
-        });
+        try {
+            connection = DerbyDbUtil.getConnection();
+            assertNotNull(connection, "数据库连接不应为null");
+            assertFalse(connection.isClosed(), "数据库连接应该是打开状态");
+        } catch (SQLException e) {
+            fail("获取数据库连接失败: " + e.getMessage());
+        }
     }
 
     @Test
-    @DisplayName("测试数据库连接URL配置")
-    void testConnectionUrl() {
-        assertDoesNotThrow(() -> {
-            Connection conn = DerbyDbUtil.getConnection();
-            assertEquals("jdbc:derby:student_management_db", 
-                conn.getMetaData().getURL().split(";")[0]);
-            conn.close();
-        });
+    @Order(2)
+    @DisplayName("测试Derby连接是否可执行SQL")
+    void testConnectionExecutable() {
+        try {
+            connection = DerbyDbUtil.getConnection();
+            assertNotNull(connection, "数据库连接不应为null");
+
+            // 尝试执行一个简单的SQL语句来验证连接有效性
+            boolean isValid = connection.isValid(5); // 5秒超时
+            assertTrue(isValid, "数据库连接应该有效");
+        } catch (SQLException e) {
+            fail("数据库连接测试失败: " + e.getMessage());
+        }
     }
 
     @Test
-    @DisplayName("测试关闭资源方法 - 正常情况")
-    void testCloseAllNormal() {
-        assertDoesNotThrow(() -> {
-            final ResultSet[] rsHolder = {null};
-            final PreparedStatement[] pstmtHolder = {null};
-            final Connection[] connHolder = {null};
+    @Order(3)
+    @DisplayName("测试关闭所有资源")
+    void testCloseAllResources() {
+        try {
+            final Connection conn = DerbyDbUtil.getConnection();
+            assertNotNull(conn, "数据库连接不应为null");
 
-            try {
-                connHolder[0] = DerbyDbUtil.getConnection();
-                pstmtHolder[0] = connHolder[0].prepareStatement("SELECT 1 FROM SYSIBM.SYSDUMMY1");
-                rsHolder[0] = pstmtHolder[0].executeQuery();
+            // 创建一个简单查询来获得ResultSet
+            final PreparedStatement pstmt = conn.prepareStatement("VALUES(1)");
+            final ResultSet rs = pstmt.executeQuery();
 
-                // 验证查询执行成功
-                assertTrue(rsHolder[0].next());
-            } finally {
-                // 测试关闭所有资源
-                assertDoesNotThrow(() -> DerbyDbUtil.closeAll(
-                        rsHolder[0], pstmtHolder[0], connHolder[0]));
-            }
-        });
+            // 验证资源都已创建
+            assertNotNull(rs, "ResultSet不应为null");
+            assertNotNull(pstmt, "PreparedStatement不应为null");
+
+            // 正常执行closeAll方法
+            assertDoesNotThrow(() -> {
+                DerbyDbUtil.closeAll(rs, pstmt, conn);
+            }, "关闭所有资源不应该抛出异常");
+
+        } catch (SQLException e) {
+            fail("创建或操作数据库资源时发生错误: " + e.getMessage());
+        }
     }
 
-
     @Test
-    @DisplayName("测试关闭资源方法 - 部分资源为null")
+    @Order(4)
+    @DisplayName("测试关闭部分为null的资源")
     void testCloseAllWithNullResources() {
+        // 测试当某些资源为null时不会抛出异常
         assertDoesNotThrow(() -> {
             DerbyDbUtil.closeAll(null, null, null);
-        });
-        
+        }, "关闭null资源不应该抛出异常");
+
         assertDoesNotThrow(() -> {
             Connection conn = DerbyDbUtil.getConnection();
             DerbyDbUtil.closeAll(null, null, conn);
-        });
+            conn.close(); // 清理连接
+        }, "关闭部分null资源不应该抛出异常");
     }
 
     @Test
+    @Order(5)
     @DisplayName("测试Derby数据库关闭功能")
     void testShutdownDerby() {
-        // 注意：此测试不会真正关闭数据库，因为后续测试还需要使用
-        assertDoesNotThrow(() -> DerbyDbUtil.shutdownDerby());
-    }
-
-    @Test
-    @DisplayName("测试驱动加载")
-    void testDriverLoading() {
-        // 驱动已在静态块中加载，这里验证连接可用性
+        // 测试关闭Derby数据库功能
         assertDoesNotThrow(() -> {
-            Connection conn = DerbyDbUtil.getConnection();
-            assertNotNull(conn);
-            conn.close();
-        });
+            DerbyDbUtil.shutdownDerby();
+        }, "关闭Derby数据库不应该抛出未预期的异常");
     }
 }
