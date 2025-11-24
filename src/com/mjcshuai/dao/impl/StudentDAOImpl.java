@@ -2,7 +2,10 @@ package com.mjcshuai.dao.impl;
 
 import com.mjcshuai.model.Student;
 import com.mjcshuai.dao.StudentDAO;
+import com.mjcshuai.resource.DerbySQL;
 import com.mjcshuai.util.DbUtil;
+import com.mjcshuai.util.DerbyDbUtil;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,15 +18,18 @@ public class StudentDAOImpl implements StudentDAO {
     @Override
     public Student login(String username, String password) {
         Connection conn = null;
+        Connection DerbyConn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         Student student = null;
 
         try {
             conn = DbUtil.getConnection();
+            DerbyConn = DerbyDbUtil.getConnection();
             // 注意：Student类的classId字段对应表中的class_id（下划线转驼峰）
-            String sql = "SELECT id, name, class_id AS classId, sex, password FROM student WHERE name = ? AND password = ?";
-            pstmt = conn.prepareStatement(sql);
+            //String sql = "SELECT id, name, class_id AS classId, sex, password FROM student WHERE name = ? AND password = ?";
+            //pstmt = conn.prepareStatement(sql);
+            pstmt = DerbyConn.prepareStatement(DerbySQL.studentLoginSQL);
             pstmt.setString(1, username);
             pstmt.setString(2, password);
             rs = pstmt.executeQuery();
@@ -41,6 +47,7 @@ public class StudentDAOImpl implements StudentDAO {
             e.printStackTrace();
         } finally {
             DbUtil.closeAll(conn, pstmt, rs);
+            DerbyDbUtil.closeAll(rs,pstmt, DerbyConn);
         }
         return student;
     }
@@ -49,14 +56,16 @@ public class StudentDAOImpl implements StudentDAO {
     @Override
     public List<Student> findAllStudents() {
         Connection conn = null;
+        Connection DerbyConn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         List<Student> studentList = new ArrayList<>();
 
         try {
             conn = DbUtil.getConnection();
-            String sql = "SELECT id, name, class_id AS classId, sex, password FROM student";
-            pstmt = conn.prepareStatement(sql);
+            DerbyConn = DerbyDbUtil.getConnection();
+            //String sql = "SELECT id, name, class_id AS classId, sex, password FROM student";
+            pstmt = DerbyConn.prepareStatement(DerbySQL.queryAllStudentSQL);
             rs = pstmt.executeQuery();
 
             while (rs.next()) {
@@ -73,6 +82,7 @@ public class StudentDAOImpl implements StudentDAO {
             e.printStackTrace();
         } finally {
             DbUtil.closeAll(conn, pstmt, rs);
+            DerbyDbUtil.closeAll(rs,pstmt, DerbyConn);
         }
         return studentList;
     }
@@ -80,11 +90,13 @@ public class StudentDAOImpl implements StudentDAO {
     @Override
     public boolean addStudent(Student student) {
         Connection conn = null;
+        Connection DerbyConn = null;
         PreparedStatement pstmt = null;
         try {
             conn = DbUtil.getConnection();
-            String sql = "INSERT INTO student (name, class_id, sex, password) VALUES (?, ?, ?, ?)";
-            pstmt = conn.prepareStatement(sql);
+            //String sql = "INSERT INTO student (name, class_id, sex, password) VALUES (?, ?, ?, ?)";
+            DerbyConn = DerbyDbUtil.getConnection();
+            pstmt = DerbyConn.prepareStatement(DerbySQL.addStudentSQL);
             pstmt.setString(1, student.getName());
             pstmt.setInt(2, student.getClassId());
             pstmt.setString(3, student.getSex());
@@ -96,6 +108,7 @@ public class StudentDAOImpl implements StudentDAO {
             return false;
         } finally {
             DbUtil.closeAll(conn, pstmt, null);
+            DerbyDbUtil.closeAll(null,pstmt, DerbyConn);
         }
     }
 
@@ -103,6 +116,7 @@ public class StudentDAOImpl implements StudentDAO {
     @Override
     public boolean updateStudent(Student student) {
         Connection conn = null;
+        Connection DerbyConn = null;
         PreparedStatement pstmt = null;
         try {
             conn = DbUtil.getConnection();
@@ -120,6 +134,7 @@ public class StudentDAOImpl implements StudentDAO {
             return false;
         } finally {
             DbUtil.closeAll(conn, pstmt, null);
+            DerbyDbUtil.closeAll(null,pstmt, DerbyConn);
         }
     }
 
@@ -127,6 +142,7 @@ public class StudentDAOImpl implements StudentDAO {
     @Override
     public boolean deleteStudent(Integer id) {
         Connection conn = null;
+        Connection DerbyConn = null;
         PreparedStatement pstmt = null;
         try {
             conn = DbUtil.getConnection();
@@ -140,6 +156,7 @@ public class StudentDAOImpl implements StudentDAO {
             return false;
         } finally {
             DbUtil.closeAll(conn, pstmt, null);
+            DerbyDbUtil.closeAll(null,pstmt, DerbyConn);
         }
     }
 }

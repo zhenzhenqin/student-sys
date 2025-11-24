@@ -2,6 +2,7 @@ package com.mjcshuai.dao.impl;
 
 import com.mjcshuai.model.Admin;
 import com.mjcshuai.dao.AdminDAO;
+import com.mjcshuai.resource.DerbySQL;
 import com.mjcshuai.util.DbUtil;
 import com.mjcshuai.util.DerbyDbUtil;
 
@@ -27,10 +28,9 @@ public class AdminDAOImpl implements AdminDAO {
             DerByConn = DerbyDbUtil.getConnection();
 
             // SQL查询（匹配数据库表字段，假设admin表的创建时间字段为create_date）
-            String sql = "SELECT id, name, password, create_date AS createDate FROM admin WHERE name = ? AND password = ?";
+            //String sql = "SELECT id, name, password, create_date AS createDate FROM admin WHERE name = ? AND password = ?";
             //language=Derby
-            String DerBySQL = "select ID, NAME, PASSWORD from ADMIN where NAME = ? and PASSWORD = ?";
-            pstmt = DerByConn.prepareStatement(DerBySQL);
+            pstmt = DerByConn.prepareStatement(DerbySQL.loginSQL);
             pstmt.setString(1, username);
             pstmt.setString(2, password);
             rs = pstmt.executeQuery();
