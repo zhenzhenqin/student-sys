@@ -9,4 +9,6 @@ public class DerbySQL {
     public static final String queryAllStudentSQL = "SELECT id, name, class_id AS classId, sex, password FROM student";
     //添加学生
     public static final String addStudentSQL = "INSERT INTO student (name, class_id, sex, password) VALUES (?, ?, ?, ?)";
+    //更新学生
+    public static final String updateStudentSQL = "UPDATE student SET name = ?, class_id = ?, sex = ?, password = ? WHERE id = ?";
 }
