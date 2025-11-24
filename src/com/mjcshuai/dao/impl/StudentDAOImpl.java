@@ -5,6 +5,7 @@ import com.mjcshuai.dao.StudentDAO;
 import com.mjcshuai.resource.DerbySQL;
 import com.mjcshuai.util.DbUtil;
 import com.mjcshuai.util.DerbyDbUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class StudentDAOImpl implements StudentDAO {
 
@@ -120,8 +122,9 @@ public class StudentDAOImpl implements StudentDAO {
         PreparedStatement pstmt = null;
         try {
             conn = DbUtil.getConnection();
-            String sql = "UPDATE student SET name = ?, class_id = ?, sex = ?, password = ? WHERE id = ?";
-            pstmt = conn.prepareStatement(sql);
+            //String sql = "UPDATE student SET name = ?, class_id = ?, sex = ?, password = ? WHERE id = ?";
+            DerbyConn = DerbyDbUtil.getConnection();
+            pstmt = DerbyConn.prepareStatement(DerbySQL.updateStudentSQL);
             pstmt.setString(1, student.getName());
             pstmt.setInt(2, student.getClassId());
             pstmt.setString(3, student.getSex());
@@ -146,8 +149,9 @@ public class StudentDAOImpl implements StudentDAO {
         PreparedStatement pstmt = null;
         try {
             conn = DbUtil.getConnection();
-            String sql = "DELETE FROM student WHERE id = ?";
-            pstmt = conn.prepareStatement(sql);
+            //String sql = "DELETE FROM student WHERE id = ?";
+            DerbyConn = DerbyDbUtil.getConnection();
+            pstmt = DerbyConn.prepareStatement(DerbySQL.deleteStudentSQL);
             pstmt.setInt(1, id);
             return pstmt.executeUpdate() > 0; // 执行成功返回true
         } catch (SQLException e) {

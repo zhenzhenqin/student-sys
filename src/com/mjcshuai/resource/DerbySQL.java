@@ -11,4 +11,6 @@ public class DerbySQL {
     public static final String addStudentSQL = "INSERT INTO student (name, class_id, sex, password) VALUES (?, ?, ?, ?)";
     //更新学生
     public static final String updateStudentSQL = "UPDATE student SET name = ?, class_id = ?, sex = ?, password = ? WHERE id = ?";
+    //删除学生
+    public static final String deleteStudentSQL = "DELETE FROM student WHERE id = ?";
 }
