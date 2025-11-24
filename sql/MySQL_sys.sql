@@ -1,3 +1,5 @@
+-- 此处为MySQL数据库对应的建表语句
+
 create database student_sys;
 
 use student_sys;
