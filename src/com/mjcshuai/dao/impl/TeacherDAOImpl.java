@@ -2,7 +2,9 @@ package com.mjcshuai.dao.impl;
 
 import com.mjcshuai.model.Teacher;
 import com.mjcshuai.dao.TeacherDAO;
+import com.mjcshuai.resource.DerbySQL;
 import com.mjcshuai.util.DbUtil;
+import com.mjcshuai.util.DerbyDbUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,14 +18,15 @@ public class TeacherDAOImpl implements TeacherDAO {
     @Override
     public Teacher login(String username, String password) {
         Connection conn = null;
+        Connection DerbyConn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         Teacher teacher = null;
 
         try {
             conn = DbUtil.getConnection();
-            String sql = "SELECT id, name, sex, title, age, password FROM teacher WHERE name = ? AND password = ?";
-            pstmt = conn.prepareStatement(sql);
+            DerbyConn = DerbyDbUtil.getConnection();
+            pstmt = DerbyConn.prepareStatement(DerbySQL.teacherLoginSQL);
             pstmt.setString(1, username);
             pstmt.setString(2, password);
             rs = pstmt.executeQuery();
@@ -42,6 +45,7 @@ public class TeacherDAOImpl implements TeacherDAO {
             e.printStackTrace();
         } finally {
             DbUtil.closeAll(conn, pstmt, rs);
+            DerbyDbUtil.closeAll(rs, pstmt, DerbyConn);
         }
         return teacher;
     }
@@ -50,6 +54,7 @@ public class TeacherDAOImpl implements TeacherDAO {
     @Override
     public List<Teacher> findAllTeachers() {
         Connection conn = null;
+        Connection DerbyConn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         List<Teacher> teacherList = new ArrayList<>();
@@ -57,9 +62,10 @@ public class TeacherDAOImpl implements TeacherDAO {
         try {
             // 获取数据库连接（调用静态工具类）
             conn = DbUtil.getConnection();
+            DerbyConn = DerbyDbUtil.getConnection();
             // SQL查询所有教师信息
-            String sql = "SELECT id, name, sex, title, age, password FROM teacher ORDER BY id ASC";
-            pstmt = conn.prepareStatement(sql);
+            //String sql = "SELECT id, name, sex, title, age, password FROM teacher ORDER BY id ASC";
+            pstmt = DerbyConn.prepareStatement(DerbySQL.queryAllTeacherSQL);
             rs = pstmt.executeQuery();
 
             // 遍历结果集，封装Teacher对象
@@ -79,6 +85,7 @@ public class TeacherDAOImpl implements TeacherDAO {
         } finally {
             // 关闭数据库资源
             DbUtil.closeAll(conn, pstmt, rs);
+            DerbyDbUtil.closeAll(rs, pstmt, DerbyConn);
         }
         return teacherList;
     }
@@ -87,11 +94,14 @@ public class TeacherDAOImpl implements TeacherDAO {
     @Override
     public boolean addTeacher(Teacher teacher) {
         Connection conn = null;
+        Connection DerbyConn = null;
         PreparedStatement pstmt = null;
         try {
             conn = DbUtil.getConnection();
-            String sql = "INSERT INTO teacher (name, sex, title, age, password) VALUES (?, ?, ?, ?, ?)";
-            pstmt = conn.prepareStatement(sql);
+            DerbyConn = DerbyDbUtil.getConnection();
+            // SQL新增教师信息
+            //String sql = "INSERT INTO teacher (name, sex, title, age, password) VALUES (?, ?, ?, ?, ?)";
+            pstmt = DerbyConn.prepareStatement(DerbySQL.addTeacherSQL);
             pstmt.setString(1, teacher.getName());
             pstmt.setString(2, teacher.getSex());
             pstmt.setString(3, teacher.getTitle());
@@ -104,6 +114,7 @@ public class TeacherDAOImpl implements TeacherDAO {
             return false;
         } finally {
             DbUtil.closeAll(conn, pstmt, null);
+            DerbyDbUtil.closeAll(null, pstmt, DerbyConn);
         }
     }
 
@@ -111,11 +122,14 @@ public class TeacherDAOImpl implements TeacherDAO {
     @Override
     public boolean updateTeacher(Teacher teacher) {
         Connection conn = null;
+        Connection DerbyConn = null;
         PreparedStatement pstmt = null;
         try {
             conn = DbUtil.getConnection();
-            String sql = "UPDATE teacher SET name = ?, sex = ?, title = ?, age = ?, password = ? WHERE id = ?";
-            pstmt = conn.prepareStatement(sql);
+            DerbyConn = DerbyDbUtil.getConnection();
+            // SQL更新教师信息
+            //String sql = "UPDATE teacher SET name = ?, sex = ?, title = ?, age = ?, password = ? WHERE id = ?";
+            pstmt = DerbyConn.prepareStatement(DerbySQL.updateTeacherSQL);
             pstmt.setString(1, teacher.getName());
             pstmt.setString(2, teacher.getSex());
             pstmt.setString(3, teacher.getTitle());
@@ -129,6 +143,7 @@ public class TeacherDAOImpl implements TeacherDAO {
             return false;
         } finally {
             DbUtil.closeAll(conn, pstmt, null);
+            DerbyDbUtil.closeAll(null, pstmt, DerbyConn);
         }
     }
 
@@ -136,12 +151,15 @@ public class TeacherDAOImpl implements TeacherDAO {
     @Override
     public boolean deleteTeacher(Integer id) {
         Connection conn = null;
+        Connection DerbyConn = null;
         PreparedStatement pstmt = null;
         try {
             conn = DbUtil.getConnection();
+            DerbyConn = DerbyDbUtil.getConnection();
             // 先检查是否有关联课程（避免外键约束错误）
-            String checkSql = "SELECT id FROM course WHERE teacher_id = ?";
-            pstmt = conn.prepareStatement(checkSql);
+            //String checkSql = "SELECT id FROM course WHERE teacher_id = ?";
+            //pstmt = conn.prepareStatement(checkSql);
+            pstmt = DerbyConn.prepareStatement(DerbySQL.checkTeacherCourseSQL);
             pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) { // 存在关联课程，不允许删除
@@ -152,8 +170,9 @@ public class TeacherDAOImpl implements TeacherDAO {
             pstmt.close();
 
             // 执行删除
-            String deleteSql = "DELETE FROM teacher WHERE id = ?";
-            pstmt = conn.prepareStatement(deleteSql);
+            //String sql = "DELETE FROM teacher WHERE id = ?";
+            //pstmt = conn.prepareStatement(deleteSql);
+            pstmt = DerbyConn.prepareStatement(DerbySQL.deleteTeacherSQL);
             pstmt.setInt(1, id);
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -162,6 +181,7 @@ public class TeacherDAOImpl implements TeacherDAO {
             return false;
         } finally {
             DbUtil.closeAll(conn, pstmt, null);
+            DerbyDbUtil.closeAll(null, pstmt, DerbyConn);
         }
     }
 }
