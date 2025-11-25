@@ -52,4 +52,34 @@ public class DerbySQL {
 
     //删除课程
     public static final String deleteCourseSQL = "DELETE FROM courses WHERE course_id = ?";
+
+    //教师查询自己的授课记录（关联课程表+统计选课人数）
+    public static final String queryTeacherCoursesSQL = "SELECT " +
+            "tc.id AS teach_id, " +
+            "c.course_id, " +
+            "c.course_name, " +
+            "c.credit, " +
+            "c.class_hours, " +
+            "tc.teach_semester, " +
+            "tc.teach_year, " +
+            "COUNT(sc.id) AS student_count " + // 统计选课人数
+            "FROM teacher_courses tc " +
+            "LEFT JOIN courses c ON tc.course_id = c.course_id " +
+            "LEFT JOIN student_courses sc ON tc.id = sc.teacher_course_id " +
+            "WHERE tc.teacher_id = ? " + // 当前教师ID
+            "GROUP BY tc.id, c.course_id, c.course_name, c.credit, c.class_hours, tc.teach_semester, tc.teach_year " +
+            "ORDER BY tc.teach_year DESC, tc.teach_semester DESC";
+
+    //查看授课课程的选课学生列表
+    public static final String querySelectedStudentsSQL = "SELECT " +
+            "s.id AS student_id, " +
+            "s.name AS student_name, " +
+            "s.class_id, " +
+            "s.sex, " +
+            "sc.select_date, " +
+            "sc.score " +
+            "FROM student_courses sc " +
+            "JOIN student s ON sc.student_id = s.id " +
+            "WHERE sc.teacher_course_id = ? " + // 授课记录ID
+            "ORDER BY sc.select_date DESC";
 }
