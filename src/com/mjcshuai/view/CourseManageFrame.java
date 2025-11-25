@@ -1,7 +1,11 @@
 package com.mjcshuai.view;
 
+import com.mjcshuai.model.Admin;
+import com.mjcshuai.model.Student;
+import com.mjcshuai.model.Teacher;
 import com.mjcshuai.resource.DerbySQL;
 import com.mjcshuai.util.DerbyDbUtil;
+import com.mjcshuai.util.UserContext;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -12,15 +16,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CourseManageFrame extends JInternalFrame {
 
-    // 核心组件：表格、表格模型、功能按钮（新增/修改/删除/刷新）
+    // 核心组件：表格、表格模型、功能按钮（按角色显示）
     private JTable courseTable;
     private DefaultTableModel tableModel;
-    private JButton addBtn, editBtn, deleteBtn, refreshBtn;
+    private JButton addBtn, editBtn, deleteBtn, refreshBtn, selectCourseBtn;
 
     // 表格列名（与数据库字段对应）
     private String[] columnNames = {"课程ID", "课程名称", "学分", "课时", "课程描述", "主讲教师"};
@@ -30,14 +36,15 @@ public class CourseManageFrame extends JInternalFrame {
         super("所有课程列表", true, true, true, true);
         setSize(900, 600);
 
-        // 初始化界面（含新增按钮）
+
+        // 初始化界面（含权限控制）
         initComponents();
 
         // 加载课程数据
         loadCourseData();
     }
 
-    // 初始化界面组件（新增增删改按钮+布局）
+    // 初始化界面组件（核心：按角色控制按钮显示）
     private void initComponents() {
         // 表格模型（不可编辑）
         tableModel = new DefaultTableModel(null, columnNames) {
@@ -51,9 +58,8 @@ public class CourseManageFrame extends JInternalFrame {
         courseTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(courseTable);
         courseTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        // 设置表格行高
         courseTable.setRowHeight(25);
-        // 设置列宽（优化显示）
+        // 调整列宽（优化显示）
         courseTable.getColumnModel().getColumn(0).setPreferredWidth(60);  // 课程ID
         courseTable.getColumnModel().getColumn(1).setPreferredWidth(150); // 课程名称
         courseTable.getColumnModel().getColumn(2).setPreferredWidth(60);  // 学分
@@ -61,38 +67,66 @@ public class CourseManageFrame extends JInternalFrame {
         courseTable.getColumnModel().getColumn(4).setPreferredWidth(300); // 课程描述
         courseTable.getColumnModel().getColumn(5).setPreferredWidth(120); // 主讲教师
 
-        // 功能按钮（新增/修改/删除/刷新）
+        // 初始化所有按钮（按角色控制显示/隐藏）
         addBtn = new JButton("新增课程");
         editBtn = new JButton("修改课程");
         deleteBtn = new JButton("删除课程");
         refreshBtn = new JButton("刷新列表");
+        selectCourseBtn = new JButton("选课"); // 学生专属按钮
+
         // 按钮样式统一
-        JButton[] buttons = {addBtn, editBtn, deleteBtn, refreshBtn};
-        for (JButton btn : buttons) {
+        JButton[] allButtons = {addBtn, editBtn, deleteBtn, refreshBtn, selectCourseBtn};
+        for (JButton btn : allButtons) {
             btn.setFont(new Font("宋体", Font.PLAIN, 14));
             btn.setPreferredSize(new Dimension(100, 30));
         }
 
-        // 按钮点击事件绑定
-        addBtn.addActionListener(e -> openCourseForm(null)); // 新增：传入null
-        editBtn.addActionListener(e -> editCourse());       // 修改：传入选中行数据
-        deleteBtn.addActionListener(e -> deleteCourse());   // 删除：选中行
-        refreshBtn.addActionListener(e -> {
-            loadCourseData();
-            JOptionPane.showMessageDialog(this, "刷新成功！", "提示", JOptionPane.INFORMATION_MESSAGE);
-        });
+        // 按钮点击事件绑定（按角色分配功能）
+        bindButtonEvents();
 
-        // 顶部按钮面板（横向排列）
+        // 顶部按钮面板（核心：按角色添加按钮）
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 10));
-        topPanel.add(addBtn);
-        topPanel.add(editBtn);
-        topPanel.add(deleteBtn);
-        topPanel.add(refreshBtn);
+
+        // 获取当前登录角色
+        UserContext userContext = UserContext.getInstance();
+        Object loginUser = userContext.getLoginUser();
+
+        if (loginUser instanceof Admin) {
+            // 管理员：显示所有按钮（新增/修改/删除/刷新）
+            topPanel.add(addBtn);
+            topPanel.add(editBtn);
+            topPanel.add(deleteBtn);
+            topPanel.add(refreshBtn);
+        } else if (loginUser instanceof Student) {
+            // 学生：仅显示「选课」+「刷新」（无增删改权限）
+            topPanel.add(selectCourseBtn);
+            topPanel.add(refreshBtn);
+        } else if (loginUser instanceof Teacher) {
+            // 教师：仅显示「刷新」（仅查看课程）
+            topPanel.add(refreshBtn);
+        }
 
         // 整体布局
         getContentPane().add(topPanel, BorderLayout.NORTH);
         getContentPane().add(scrollPane, BorderLayout.CENTER);
+    }
+
+    // 绑定按钮事件（按角色区分功能）
+    private void bindButtonEvents() {
+        // 管理员专属事件（新增/修改/删除）
+        addBtn.addActionListener(e -> openCourseForm(null));
+        editBtn.addActionListener(e -> editCourse());
+        deleteBtn.addActionListener(e -> deleteCourse());
+
+        // 学生专属事件（选课）
+        selectCourseBtn.addActionListener(e -> selectCourse());
+
+        // 公共事件（刷新）
+        refreshBtn.addActionListener(e -> {
+            loadCourseData();
+            JOptionPane.showMessageDialog(this, "刷新成功！", "提示", JOptionPane.INFORMATION_MESSAGE);
+        });
     }
 
     // 核心：加载所有课程数据
@@ -126,12 +160,11 @@ public class CourseManageFrame extends JInternalFrame {
         }
     }
 
-    // 1. 新增课程：打开表单弹窗
+    // ---------------------- 管理员专属功能（学生不可见）----------------------
     private void openCourseForm(Map<String, Object> courseData) {
         new CourseFormDialog(courseData).setVisible(true);
     }
 
-    // 2. 修改课程：校验选中行→打开表单（填充数据）
     private void editCourse() {
         int selectedRow = courseTable.getSelectedRow();
         if (selectedRow == -1) {
@@ -152,7 +185,6 @@ public class CourseManageFrame extends JInternalFrame {
         openCourseForm(courseData);
     }
 
-    // 3. 删除课程：校验选中行→确认→执行删除
     private void deleteCourse() {
         int selectedRow = courseTable.getSelectedRow();
         if (selectedRow == -1) {
@@ -192,7 +224,7 @@ public class CourseManageFrame extends JInternalFrame {
         }
     }
 
-    // 内部类：新增/修改课程共用表单弹窗（核心修正此处！）
+    // 管理员新增/修改课程弹窗（学生不可见）
     class CourseFormDialog extends JDialog {
         // 表单组件
         private JTextField nameField, creditField, hoursField, descField;
@@ -203,17 +235,15 @@ public class CourseManageFrame extends JInternalFrame {
         // 标记：是新增（null）还是修改（有course_id）
         private Integer courseId;
 
-        // 修正：构造方法改为「获取顶层主窗口」作为父窗口，解决参数不匹配
         public CourseFormDialog(Map<String, Object> courseData) {
-            // 关键修正：获取CourseManageFrame的顶层主窗口（必须是JFrame类型），作为JDialog的合法父窗口
             super((Frame) CourseManageFrame.this.getTopLevelAncestor(),
                     courseData == null ? "新增课程" : "修改课程",
-                    true); // 第三个参数true=模态窗口（必须关闭弹窗才能操作其他窗口）
+                    true); // 模态窗口
 
             // 弹窗基础配置
             setSize(450, 350);
-            setLocationRelativeTo(CourseManageFrame.this); // 相对于课程列表窗口居中
-            setDefaultCloseOperation(DISPOSE_ON_CLOSE); // 关闭弹窗时释放资源
+            setLocationRelativeTo(CourseManageFrame.this);
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
             // 标记是否为修改（有数据则为修改）
             this.courseId = courseData == null ? null : (int) courseData.get("course_id");
@@ -454,5 +484,120 @@ public class CourseManageFrame extends JInternalFrame {
                 DerbyDbUtil.closeAll(null, pstmt, conn);
             }
         }
+    }
+
+    // ---------------------- 学生专属功能（选课）----------------------
+    private void selectCourse() {
+        // 1. 校验是否选中课程
+        int selectedRow = courseTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "请选中要选的课程！", "提示", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 2. 获取当前登录学生信息
+        UserContext userContext = UserContext.getInstance();
+        Student currentStudent = (Student) userContext.getLoginUser();
+        Integer studentId = currentStudent.getId();
+
+        // 3. 获取选中课程的信息（课程ID+课程名称）
+        int courseId = (int) tableModel.getValueAt(selectedRow, 0);
+        String courseName = tableModel.getValueAt(selectedRow, 1).toString();
+
+        // 4. 校验是否已选该课程（避免重复选课）
+        if (isCourseSelected(studentId, courseId)) {
+            JOptionPane.showMessageDialog(this, "你已选过「" + courseName + "」，不可重复选课！", "提示", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 5. 获取该课程的授课记录ID（必须有授课教师才能选课）
+        Integer teacherCourseId = getFirstTeacherCourseId(courseId);
+        if (teacherCourseId == null) {
+            JOptionPane.showMessageDialog(this, "「" + courseName + "」暂无授课记录，无法选课！", "失败", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 6. 确认选课
+        int confirm = JOptionPane.showConfirmDialog(this, "确定要选「" + courseName + "」吗？", "确认选课", JOptionPane.YES_NO_OPTION);
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        // 7. 执行选课（插入student_courses记录）
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = DerbyDbUtil.getConnection();
+            pstmt = conn.prepareStatement(DerbySQL.insertStudentCourseSQL);
+            pstmt.setInt(1, studentId);          // 学生ID
+            pstmt.setInt(2, teacherCourseId);    // 授课记录ID
+            pstmt.setString(3, getCurrentTime());// 选课时间（当前时间）
+
+            // 8. 执行插入
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                JOptionPane.showMessageDialog(this, "选课成功！可前往「已选课程」查看", "成功", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "选课失败！", "失败", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "选课异常！\n" + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        } finally {
+            DerbyDbUtil.closeAll(null, pstmt, conn);
+        }
+    }
+
+    // 辅助方法：校验学生是否已选该课程
+    private boolean isCourseSelected(Integer studentId, Integer courseId) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DerbyDbUtil.getConnection();
+            pstmt = conn.prepareStatement(DerbySQL.checkStudentCourseExistsSQL);
+            pstmt.setInt(1, studentId);
+            pstmt.setInt(2, courseId);
+            rs = pstmt.executeQuery();
+
+            return rs.next(); // 有结果则说明已选
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // 异常时默认返回未选（避免误判）
+        } finally {
+            DerbyDbUtil.closeAll(rs, pstmt, conn);
+        }
+    }
+
+    // 辅助方法：获取课程的第一个授课记录ID（适配Derby语法）
+    private Integer getFirstTeacherCourseId(Integer courseId) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DerbyDbUtil.getConnection();
+            pstmt = conn.prepareStatement(DerbySQL.getFirstTeacherCourseIdSQL);
+            pstmt.setInt(1, courseId);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("id");
+            }
+            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            DerbyDbUtil.closeAll(rs, pstmt, conn);
+        }
+    }
+
+    // 辅助方法：获取当前时间（格式：yyyy-MM-dd HH:mm:ss）
+    private String getCurrentTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(new Date());
     }
 }
