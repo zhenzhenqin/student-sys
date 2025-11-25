@@ -82,4 +82,27 @@ public class DerbySQL {
             "JOIN student s ON sc.student_id = s.id " +
             "WHERE sc.teacher_course_id = ? " + // 授课记录ID
             "ORDER BY sc.select_date DESC";
+
+    public static final String queryStudentSelectedCoursesSQL = "SELECT " +
+            "c.course_id, " +
+            "c.course_name, " +
+            "c.credit, " +
+            "c.class_hours, " +
+            "t.name AS teacher_name, " + // 授课教师姓名
+            "tc.teach_semester, " +     // 授课学期
+            "sc.select_date, " +         // 选课时间（注意：你的student_courses表缺少该字段！下面会修正）
+            "sc.score " +                // 成绩
+            "FROM student_courses sc " +
+            "JOIN teacher_courses tc ON sc.teacher_course_id = tc.id " + // 先关联授课记录
+            "JOIN courses c ON tc.course_id = c.course_id " + // 再通过授课记录关联课程
+            "LEFT JOIN teacher t ON tc.teacher_id = t.id " + // 关联教师
+            "WHERE sc.student_id = ? " + // 当前学生ID
+            "ORDER BY sc.select_date DESC"; // 按选课时间倒序
+
+    // 2. 学生退课（修正条件：通过teacher_course_id精准删除，避免复杂子查询）
+    public static final String dropStudentCourseSQL = "DELETE FROM student_courses " +
+            "WHERE student_id = ? " +
+            "AND teacher_course_id = (SELECT id FROM teacher_courses " +
+            "WHERE course_id = (SELECT course_id FROM courses WHERE course_name = ?) " +
+            "AND teach_semester = ?)";
 }

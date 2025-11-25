@@ -97,3 +97,12 @@ VALUES (1, 1, '2024-2025-1', 2024), (1, 2, '2024-2025-1', 2024);
 -- 3. 测试学生（id=1）的选课记录
 INSERT INTO student_courses (student_id, teacher_course_id)
 VALUES (1, 1), (1, 2);
+
+-- 给学生选课表添加选课时间字段（默认值为当前时间格式，适配你的create_date字段风格）
+ALTER TABLE student_courses
+    ADD COLUMN select_date VARCHAR(20) DEFAULT '2025-11-25 00:00:00';
+
+-- 更新已有测试数据的选课时间
+UPDATE student_courses
+SET select_date = '2025-11-25 10:00:00'
+WHERE id IN (1, 2); -- 对应你的测试数据（student_id=1的两条选课记录

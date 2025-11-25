@@ -150,10 +150,4 @@ public class LoginFrame extends JFrame {
             }
         });
     }
-
-    // 测试入口
-    public static void main(String[] args) {
-        //  Swing线程安全启动
-        SwingUtilities.invokeLater(() -> new LoginFrame().setVisible(true));
-    }
 }
