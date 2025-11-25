@@ -3,7 +3,9 @@ package com.mjcshuai.view;
 import com.mjcshuai.model.Teacher;
 import com.mjcshuai.dao.TeacherDAO;
 import com.mjcshuai.dao.impl.TeacherDAOImpl;
-import com.mjcshuai.util.DbUtil;
+import com.mjcshuai.resource.DerbySQL;
+import com.mjcshuai.util.DerbyDbUtil;
+//import com.mjcshuai.util.DbUtil;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -293,12 +295,14 @@ public class TeacherManageFrame extends JInternalFrame {
     // 校验用户名是否已存在（新增/编辑时使用）
     private boolean isUsernameExists(String username) {
         Connection conn = null;
+        Connection DerbyConn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
-            conn = DbUtil.getConnection();
-            String sql = "SELECT id FROM teacher WHERE name = ?";
-            pstmt = conn.prepareStatement(sql);
+            //conn = DbUtil.getConnection();
+            DerbyConn = DerbyDbUtil.getConnection();
+            //String sql = "SELECT id FROM teacher WHERE name = ?";
+            pstmt = conn.prepareStatement(DerbySQL.queryTeacNameById);
             pstmt.setString(1, username);
             rs = pstmt.executeQuery();
             return rs.next(); // 存在返回true
@@ -306,7 +310,8 @@ public class TeacherManageFrame extends JInternalFrame {
             e.printStackTrace();
             return false;
         } finally {
-            DbUtil.closeAll(conn, pstmt, rs);
+            //DbUtil.closeAll(conn, pstmt, rs);
+            DerbyDbUtil.closeAll(rs, pstmt, DerbyConn);
         }
     }
 }

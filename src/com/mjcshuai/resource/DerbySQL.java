@@ -14,6 +14,8 @@ public class DerbySQL {
     public static final String updateStudentSQL = "UPDATE student SET name = ?, class_id = ?, sex = ?, password = ? WHERE id = ?";
     //删除学生
     public static final String deleteStudentSQL = "DELETE FROM student WHERE id = ?";
+    //根据学生姓名查询id
+    public static final String queryStudentById = "SELECT id FROM student WHERE name = ?";
 
 
     //教师登录
@@ -28,4 +30,6 @@ public class DerbySQL {
     public static final String checkTeacherCourseSQL = "SELECT id FROM course WHERE teacher_id = ?";
     //删除教师
     public static final String deleteTeacherSQL = "DELETE FROM teacher WHERE id = ?";
+    //根据教师姓名查询id
+    public static final String queryTeacNameById = "SELECT id FROM teacher WHERE name = ?";
 }

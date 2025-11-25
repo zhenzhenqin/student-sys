@@ -24,7 +24,7 @@ public class TeacherDAOImpl implements TeacherDAO {
         Teacher teacher = null;
 
         try {
-            conn = DbUtil.getConnection();
+            //conn = DbUtil.getConnection();
             DerbyConn = DerbyDbUtil.getConnection();
             pstmt = DerbyConn.prepareStatement(DerbySQL.teacherLoginSQL);
             pstmt.setString(1, username);
@@ -44,7 +44,7 @@ public class TeacherDAOImpl implements TeacherDAO {
             System.err.println("教师登录查询异常: " + e.getMessage());
             e.printStackTrace();
         } finally {
-            DbUtil.closeAll(conn, pstmt, rs);
+            //DbUtil.closeAll(conn, pstmt, rs);
             DerbyDbUtil.closeAll(rs, pstmt, DerbyConn);
         }
         return teacher;
@@ -61,7 +61,7 @@ public class TeacherDAOImpl implements TeacherDAO {
 
         try {
             // 获取数据库连接（调用静态工具类）
-            conn = DbUtil.getConnection();
+            //conn = DbUtil.getConnection();
             DerbyConn = DerbyDbUtil.getConnection();
             // SQL查询所有教师信息
             //String sql = "SELECT id, name, sex, title, age, password FROM teacher ORDER BY id ASC";
@@ -84,7 +84,7 @@ public class TeacherDAOImpl implements TeacherDAO {
             e.printStackTrace();
         } finally {
             // 关闭数据库资源
-            DbUtil.closeAll(conn, pstmt, rs);
+            //DbUtil.closeAll(conn, pstmt, rs);
             DerbyDbUtil.closeAll(rs, pstmt, DerbyConn);
         }
         return teacherList;
@@ -97,7 +97,7 @@ public class TeacherDAOImpl implements TeacherDAO {
         Connection DerbyConn = null;
         PreparedStatement pstmt = null;
         try {
-            conn = DbUtil.getConnection();
+            //conn = DbUtil.getConnection();
             DerbyConn = DerbyDbUtil.getConnection();
             // SQL新增教师信息
             //String sql = "INSERT INTO teacher (name, sex, title, age, password) VALUES (?, ?, ?, ?, ?)";
@@ -113,7 +113,7 @@ public class TeacherDAOImpl implements TeacherDAO {
             e.printStackTrace();
             return false;
         } finally {
-            DbUtil.closeAll(conn, pstmt, null);
+            //DbUtil.closeAll(conn, pstmt, null);
             DerbyDbUtil.closeAll(null, pstmt, DerbyConn);
         }
     }
@@ -125,7 +125,7 @@ public class TeacherDAOImpl implements TeacherDAO {
         Connection DerbyConn = null;
         PreparedStatement pstmt = null;
         try {
-            conn = DbUtil.getConnection();
+            //conn = DbUtil.getConnection();
             DerbyConn = DerbyDbUtil.getConnection();
             // SQL更新教师信息
             //String sql = "UPDATE teacher SET name = ?, sex = ?, title = ?, age = ?, password = ? WHERE id = ?";
@@ -142,7 +142,7 @@ public class TeacherDAOImpl implements TeacherDAO {
             e.printStackTrace();
             return false;
         } finally {
-            DbUtil.closeAll(conn, pstmt, null);
+            //DbUtil.closeAll(conn, pstmt, null);
             DerbyDbUtil.closeAll(null, pstmt, DerbyConn);
         }
     }
@@ -154,7 +154,7 @@ public class TeacherDAOImpl implements TeacherDAO {
         Connection DerbyConn = null;
         PreparedStatement pstmt = null;
         try {
-            conn = DbUtil.getConnection();
+            //conn = DbUtil.getConnection();
             DerbyConn = DerbyDbUtil.getConnection();
             // 先检查是否有关联课程（避免外键约束错误）
             //String checkSql = "SELECT id FROM course WHERE teacher_id = ?";
@@ -180,7 +180,7 @@ public class TeacherDAOImpl implements TeacherDAO {
             e.printStackTrace();
             return false;
         } finally {
-            DbUtil.closeAll(conn, pstmt, null);
+            //DbUtil.closeAll(conn, pstmt, null);
             DerbyDbUtil.closeAll(null, pstmt, DerbyConn);
         }
     }

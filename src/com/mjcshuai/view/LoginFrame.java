@@ -24,7 +24,6 @@ public class LoginFrame extends JFrame {
     private JPasswordField passwordField;
     private JButton loginButton;
 
-    // DAO层对象（接口编程，解耦）
     private AdminDAO adminDAO = new AdminDAOImpl();
     private TeacherDAO teacherDAO = new TeacherDAOImpl();
     private StudentDAO studentDAO = new StudentDAOImpl();
