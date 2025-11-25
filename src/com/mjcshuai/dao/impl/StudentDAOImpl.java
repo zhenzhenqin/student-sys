@@ -3,10 +3,8 @@ package com.mjcshuai.dao.impl;
 import com.mjcshuai.model.Student;
 import com.mjcshuai.dao.StudentDAO;
 import com.mjcshuai.resource.DerbySQL;
-import com.mjcshuai.util.DbUtil;
+//import com.mjcshuai.util.DbUtil;
 import com.mjcshuai.util.DerbyDbUtil;
-import lombok.extern.slf4j.Slf4j;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

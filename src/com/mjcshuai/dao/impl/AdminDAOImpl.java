@@ -3,7 +3,7 @@ package com.mjcshuai.dao.impl;
 import com.mjcshuai.model.Admin;
 import com.mjcshuai.dao.AdminDAO;
 import com.mjcshuai.resource.DerbySQL;
-import com.mjcshuai.util.DbUtil;
+//import com.mjcshuai.util.DbUtil;
 import com.mjcshuai.util.DerbyDbUtil;
 
 import java.sql.Connection;
