@@ -1,3 +1,4 @@
+/*
 package test.java.com.mjcshuai.util;
 
 import com.mjcshuai.util.DbUtil;
@@ -75,3 +76,4 @@ public class DbUtilTest {
         }
     }
 }
+*/

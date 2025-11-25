@@ -64,23 +64,23 @@ public class MainFrame extends JFrame {
         }
 
         // 4. 课程管理菜单（不同角色显示不同菜单项）
-        /*JMenu courseMenu = new JMenu("课程管理");
+        JMenu courseMenu = new JMenu("课程管理");
         if (userContext.hasPermission("view_all_courses")) { // 管理员/学生
             JMenuItem viewAllCourseItem = new JMenuItem("查看所有课程");
             viewAllCourseItem.addActionListener(e -> openInternalFrame(new CourseManageFrame(), "课程列表"));
             courseMenu.add(viewAllCourseItem);
-        }*/
-        /*if (userContext.hasPermission("view_teaching_courses")) { // 教师
+        }
+        if (userContext.hasPermission("view_teaching_courses")) { // 教师
             JMenuItem teachingCourseItem = new JMenuItem("查看我的授课");
             teachingCourseItem.addActionListener(e -> openInternalFrame(new TeacherCourseFrame(), "我的授课"));
             courseMenu.add(teachingCourseItem);
-        }*/
-        /*if (userContext.hasPermission("view_selected_courses")) { // 学生
+        }
+        if (userContext.hasPermission("view_selected_courses")) { // 学生
             JMenuItem selectedCourseItem = new JMenuItem("查看已选课程");
             selectedCourseItem.addActionListener(e -> openInternalFrame(new StudentSelectedCourseFrame(), "已选课程"));
             courseMenu.add(selectedCourseItem);
         }
-        menuBar.add(courseMenu);*/
+        menuBar.add(courseMenu);
 
         // 5. 成绩管理菜单（仅教师可见）
         /*if (userContext.hasPermission("grade_students")) {

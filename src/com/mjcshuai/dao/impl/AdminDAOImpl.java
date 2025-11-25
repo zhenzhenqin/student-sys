@@ -3,7 +3,7 @@ package com.mjcshuai.dao.impl;
 import com.mjcshuai.model.Admin;
 import com.mjcshuai.dao.AdminDAO;
 import com.mjcshuai.resource.DerbySQL;
-import com.mjcshuai.util.DbUtil;
+//import com.mjcshuai.util.DbUtil;
 import com.mjcshuai.util.DerbyDbUtil;
 
 import java.sql.Connection;
@@ -23,7 +23,7 @@ public class AdminDAOImpl implements AdminDAO {
 
         try {
             // 获取mysql的数据库连接
-            conn = DbUtil.getConnection();
+            //conn = DbUtil.getConnection();
             //获取derby的数据库连接
             DerByConn = DerbyDbUtil.getConnection();
 
@@ -48,7 +48,7 @@ public class AdminDAOImpl implements AdminDAO {
             e.printStackTrace();
         } finally {
             // 调用静态方法关闭所有资源
-            DbUtil.closeAll(conn, pstmt, rs);
+            //DbUtil.closeAll(conn, pstmt, rs);
 
             //关闭数据库释放资源
             DerbyDbUtil.closeAll(rs, pstmt, DerByConn);

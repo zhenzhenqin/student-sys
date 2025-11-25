@@ -1,3 +1,4 @@
+/*
 package com.mjcshuai.util;
 
 import com.mjcshuai.resource.DbProperties;
@@ -24,11 +25,13 @@ public class DbUtil {
 		}
 	}
 
-	/**
+	*/
+/**
 	 * 获取数据库连接
 	 * @return Connection 对象
 	 * @throws SQLException 数据库连接异常
-	 */
+	 *//*
+
 	public static Connection getConnection() throws SQLException {
 		try {
 			return DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -38,10 +41,12 @@ public class DbUtil {
 		}
 	}
 
-	/**
+	*/
+/**
 	 * 关闭数据库连接
 	 * @param conn Connection 对象
-	 */
+	 *//*
+
 	public static void closeConnection(Connection conn) {
 		if (conn != null) {
 			try {
@@ -52,10 +57,12 @@ public class DbUtil {
 		}
 	}
 
-	/**
+	*/
+/**
 	 * 关闭Statement
 	 * @param stmt Statement 对象
-	 */
+	 *//*
+
 	public static void closeStatement(Statement stmt) {
 		if (stmt != null) {
 			try {
@@ -66,10 +73,12 @@ public class DbUtil {
 		}
 	}
 
-	/**
+	*/
+/**
 	 * 关闭ResultSet
 	 * @param rs ResultSet 对象
-	 */
+	 *//*
+
 	public static void closeResultSet(ResultSet rs) {
 		if (rs != null) {
 			try {
@@ -80,15 +89,18 @@ public class DbUtil {
 		}
 	}
 
-	/**
+	*/
+/**
 	 * 关闭所有数据库资源
 	 * @param conn Connection 对象
 	 * @param stmt Statement 对象
 	 * @param rs ResultSet 对象
-	 */
+	 *//*
+
 	public static void closeAll(Connection conn, Statement stmt, ResultSet rs) {
 		closeResultSet(rs);
 		closeStatement(stmt);
 		closeConnection(conn);
 	}
 }
+*/
