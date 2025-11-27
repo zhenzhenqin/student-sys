@@ -413,30 +413,54 @@ public class CourseManageFrame extends JInternalFrame {
             int hours = Integer.parseInt(hoursField.getText().trim());
             String desc = descField.getText().trim();
             String selectedTeacher = (String) teacherCombo.getSelectedItem();
-            Integer teacherId = teacherMap.get(selectedTeacher); // 可能为null（无教师）
+            Integer teacherId = teacherMap.get(selectedTeacher);
 
             Connection conn = null;
             PreparedStatement pstmt = null;
 
             try {
                 conn = DerbyDbUtil.getConnection();
-                pstmt = conn.prepareStatement(DerbySQL.insertCourseSQL);
-                // 填充SQL参数（对应insert语句的字段顺序）
+
+                // 首先插入课程信息，要求返回生成的键值
+                pstmt = conn.prepareStatement(DerbySQL.insertCourseSQL, PreparedStatement.RETURN_GENERATED_KEYS);
                 pstmt.setString(1, name);
                 pstmt.setBigDecimal(2, credit);
                 pstmt.setInt(3, hours);
                 pstmt.setString(4, desc.isEmpty() ? null : desc);
                 pstmt.setObject(5, teacherId); // 允许为null
 
-                // 执行插入
                 int affectedRows = pstmt.executeUpdate();
+
+                // 获取生成的课程ID
+                int generatedCourseId = -1;
                 if (affectedRows > 0) {
+                    try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                        if (generatedKeys.next()) {
+                            generatedCourseId = generatedKeys.getInt(1);
+                        }
+                    }
+                }
+
+                // 如果课程插入成功，且选择了教师，则插入教师课程关联信息
+                if (affectedRows > 0 && teacherId != null && generatedCourseId != -1) {
+                    // 插入教师课程关联信息
+                    pstmt = conn.prepareStatement(DerbySQL.insertTeacherCourseSQL);
+                    pstmt.setObject(1, teacherId);
+                    pstmt.setObject(2, generatedCourseId); // 使用生成的课程ID
+                    pstmt.setString(3, "2025-2026");
+                    pstmt.setInt(4, 2025); // 假设当前为2025年
+
+                    pstmt.executeUpdate();
+
                     JOptionPane.showMessageDialog(this, "新增课程成功！", "成功", JOptionPane.INFORMATION_MESSAGE);
-                    dispose(); // 关闭弹窗
-                    loadCourseData(); // 刷新表格
+                } else if (affectedRows > 0) {
+                    JOptionPane.showMessageDialog(this, "新增课程成功！", "成功", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(this, "新增课程失败！", "失败", JOptionPane.ERROR_MESSAGE);
                 }
+
+                dispose(); // 关闭弹窗
+                loadCourseData(); // 刷新表格
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(this, "新增课程异常！\n" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();

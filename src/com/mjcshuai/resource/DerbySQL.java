@@ -45,6 +45,10 @@ public class DerbySQL {
     public static final String insertCourseSQL = "INSERT INTO courses (course_name, credit, class_hours, course_desc, teacher_id) " +
             "VALUES (?, ?, ?, ?, ?)";
 
+    //插入老师课程的关联表
+    public static final  String insertTeacherCourseSQL = "insert into teacher_courses (teacher_id, course_id, teach_semester, teach_year) " +
+            "VALUES (?, ?, ?, ?)";
+
     //修改课程
     public static final String updateCourseSQL = "UPDATE courses " +
             "SET course_name = ?, credit = ?, class_hours = ?, course_desc = ?, teacher_id = ? " +

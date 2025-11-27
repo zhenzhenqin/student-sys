@@ -89,7 +89,7 @@ public class StudentDAOImpl implements StudentDAO {
 
     @Override
     public boolean addStudent(Student student) {
-        Connection conn = null;
+        //Connection conn = null;
         Connection DerbyConn = null;
         PreparedStatement pstmt = null;
         try {
