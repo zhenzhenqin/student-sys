@@ -160,7 +160,9 @@ public class TeacherDAOImpl implements TeacherDAO {
             //String checkSql = "SELECT id FROM course WHERE teacher_id = ?";
             //pstmt = conn.prepareStatement(checkSql);
             pstmt = DerbyConn.prepareStatement(DerbySQL.checkTeacherCourseSQL);
-            pstmt.setInt(1, id);
+
+            //根据teacher_id去查询关联表中是否有相关数据
+            pstmt.setInt(1, id);     //id为teacher_id
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) { // 存在关联课程，不允许删除
                 rs.close();

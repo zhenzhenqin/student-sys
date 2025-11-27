@@ -146,7 +146,7 @@ public class TeacherCourseFrame extends JInternalFrame {
                 JOptionPane.showMessageDialog(this, "暂无授课记录！", "提示", JOptionPane.INFORMATION_MESSAGE);
             }
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "加载授课数据失败！\n" + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         } finally {
@@ -251,7 +251,7 @@ public class TeacherCourseFrame extends JInternalFrame {
                     JOptionPane.showMessageDialog(this, "暂无学生选择该课程！", "提示", JOptionPane.INFORMATION_MESSAGE);
                 }
 
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "加载学生数据失败！\n" + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             } finally {

@@ -152,7 +152,7 @@ public class CourseManageFrame extends JInternalFrame {
                 };
                 tableModel.addRow(rowData);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "加载课程失败！\n" + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         } finally {
@@ -216,7 +216,7 @@ public class CourseManageFrame extends JInternalFrame {
             } else {
                 JOptionPane.showMessageDialog(this, "课程删除失败！", "失败", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "删除课程异常！\n" + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         } finally {
@@ -337,7 +337,7 @@ public class CourseManageFrame extends JInternalFrame {
                     teacherMap.put(teacherName, teacherId);
                     teacherCombo.addItem(teacherName);
                 }
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "加载教师列表失败！", "错误", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             } finally {
@@ -461,7 +461,7 @@ public class CourseManageFrame extends JInternalFrame {
 
                 dispose(); // 关闭弹窗
                 loadCourseData(); // 刷新表格
-            } catch (SQLException ex) {
+            } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "新增课程异常！\n" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
             } finally {
@@ -501,7 +501,7 @@ public class CourseManageFrame extends JInternalFrame {
                 } else {
                     JOptionPane.showMessageDialog(this, "修改课程失败！", "失败", JOptionPane.ERROR_MESSAGE);
                 }
-            } catch (SQLException ex) {
+            } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "修改课程异常！\n" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
             } finally {
@@ -565,7 +565,7 @@ public class CourseManageFrame extends JInternalFrame {
             } else {
                 JOptionPane.showMessageDialog(this, "选课失败！", "失败", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "选课异常！\n" + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         } finally {
@@ -587,7 +587,7 @@ public class CourseManageFrame extends JInternalFrame {
             rs = pstmt.executeQuery();
 
             return rs.next(); // 有结果则说明已选
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false; // 异常时默认返回未选（避免误判）
         } finally {
@@ -611,7 +611,7 @@ public class CourseManageFrame extends JInternalFrame {
                 return rs.getInt("id");
             }
             return null;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         } finally {

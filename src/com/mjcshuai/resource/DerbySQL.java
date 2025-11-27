@@ -27,7 +27,7 @@ public class DerbySQL {
     //更新教师
     public static final String updateTeacherSQL = "UPDATE teacher SET name = ?, sex = ?, title = ?, age = ?, password = ? WHERE id = ?";
     //删除教师前先检查是否有关联课程
-    public static final String checkTeacherCourseSQL = "SELECT id FROM course WHERE teacher_id = ?";
+    public static final String checkTeacherCourseSQL = "SELECT id FROM teacher_courses WHERE teacher_id = ?";
     //删除教师
     public static final String deleteTeacherSQL = "DELETE FROM teacher WHERE id = ?";
     //根据教师姓名查询id
@@ -46,7 +46,7 @@ public class DerbySQL {
             "VALUES (?, ?, ?, ?, ?)";
 
     //插入老师课程的关联表
-    public static final  String insertTeacherCourseSQL = "insert into teacher_courses (teacher_id, course_id, teach_semester, teach_year) " +
+    public static final String insertTeacherCourseSQL = "insert into teacher_courses (teacher_id, course_id, teach_semester, teach_year) " +
             "VALUES (?, ?, ?, ?)";
 
     //修改课程

@@ -148,7 +148,7 @@ public class StudentSelectedCourseFrame extends JInternalFrame {
                 JOptionPane.showMessageDialog(this, "暂无已选课程，可前往课程列表选课！", "提示", JOptionPane.INFORMATION_MESSAGE);
             }
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             // 异常处理：明确提示用户（如果报错“列 SELECT_DATE 不存在”，说明需要添加该字段）
             String errorMsg = e.getMessage().contains("SELECT_DATE") ?
                     "加载已选课程失败！\n原因：student_courses表缺少select_date字段，请执行添加字段SQL！" :
@@ -206,7 +206,7 @@ public class StudentSelectedCourseFrame extends JInternalFrame {
                 JOptionPane.showMessageDialog(this, "退课失败，未找到对应的选课记录！", "失败", JOptionPane.ERROR_MESSAGE);
             }
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "退课异常！\n原因：" + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         } finally {
