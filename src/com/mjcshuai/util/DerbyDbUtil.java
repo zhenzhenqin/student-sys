@@ -25,7 +25,7 @@ public class DerbyDbUtil {
     static {
         try {
             Class.forName(DRIVER);
-            System.out.println("Derby 驱动加载成功！");
+            //System.out.println("Derby 驱动加载成功！");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Derby 驱动加载失败！请检查依赖是否正确", e);
         }
@@ -36,7 +36,7 @@ public class DerbyDbUtil {
      */
     public static Connection getConnection() throws SQLException {
         Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-        System.out.println("Derby 数据库连接成功！");
+        //System.out.println("Derby 数据库连接成功！");
         return conn;
     }
 
@@ -49,7 +49,7 @@ public class DerbyDbUtil {
             if (pstmt != null) pstmt.close();
             if (conn != null) conn.close(); // 关闭连接，释放资源
         } catch (SQLException e) {
-            System.err.println("资源关闭失败：" + e.getMessage());
+            //System.err.println("资源关闭失败：" + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -65,7 +65,7 @@ public class DerbyDbUtil {
         } catch (SQLException e) {
             // 正常关闭会抛出 SQLState=XJ015 的异常，无需处理
             if ("XJ015".equals(e.getSQLState())) {
-                System.out.println("Derby 数据库正常关闭！");
+                //System.out.println("Derby 数据库正常关闭！");
             } else {
                 System.err.println("Derby 关闭异常：" + e.getMessage());
                 e.printStackTrace();
