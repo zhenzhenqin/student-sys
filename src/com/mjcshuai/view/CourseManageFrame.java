@@ -1,5 +1,7 @@
 package com.mjcshuai.view;
 
+import com.mjcshuai.dao.CourseDAO;
+import com.mjcshuai.dao.impl.CourseDAOImpl;
 import com.mjcshuai.model.Admin;
 import com.mjcshuai.model.Student;
 import com.mjcshuai.model.Teacher;
@@ -19,6 +21,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CourseManageFrame extends JInternalFrame {
@@ -27,6 +30,7 @@ public class CourseManageFrame extends JInternalFrame {
     private JTable courseTable;
     private DefaultTableModel tableModel;
     private JButton addBtn, editBtn, deleteBtn, refreshBtn, selectCourseBtn;
+    private CourseDAO courseDAO = new CourseDAOImpl();
 
     // 表格列名（与数据库字段对应）
     private String[] columnNames = {"课程ID", "课程名称", "学分", "课时", "课程描述", "主讲教师"};
@@ -44,7 +48,7 @@ public class CourseManageFrame extends JInternalFrame {
         loadCourseData();
     }
 
-    // 初始化界面组件（核心：按角色控制按钮显示）
+    // 初始化界面组件（按角色控制按钮显示）
     private void initComponents() {
         // 表格模型（不可编辑）
         tableModel = new DefaultTableModel(null, columnNames) {
@@ -129,34 +133,27 @@ public class CourseManageFrame extends JInternalFrame {
         });
     }
 
-    // 核心：加载所有课程数据
+    // 加载所有课程数据
     private void loadCourseData() {
-        tableModel.setRowCount(0);
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
+        tableModel.setRowCount(0); // 清空旧数据
 
         try {
-            conn = DerbyDbUtil.getConnection();
-            pstmt = conn.prepareStatement(DerbySQL.queryAllCourseSQL);
-            rs = pstmt.executeQuery();
+            List<Map<String, Object>> courses = courseDAO.findAllCourses();
 
-            while (rs.next()) {
+            for (Map<String, Object> course : courses) {
                 Object[] rowData = {
-                        rs.getInt("course_id"),
-                        rs.getString("course_name"),
-                        rs.getBigDecimal("credit"),
-                        rs.getInt("class_hours"),
-                        rs.getString("course_desc") == null ? "无" : rs.getString("course_desc"),
-                        rs.getString("teacher_name") == null ? "无" : rs.getString("teacher_name")
+                        course.get("course_id"),
+                        course.get("course_name"),
+                        course.get("credit"),
+                        course.get("class_hours"),
+                        course.get("course_desc"),
+                        course.get("teacher_name")
                 };
                 tableModel.addRow(rowData);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "加载课程失败！\n" + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
-        } finally {
-            DerbyDbUtil.closeAll(rs, pstmt, conn);
         }
     }
 
@@ -192,35 +189,24 @@ public class CourseManageFrame extends JInternalFrame {
             return;
         }
 
-        // 确认删除
         int confirm = JOptionPane.showConfirmDialog(this, "确定要删除该课程吗？\n删除后不可恢复！", "确认删除", JOptionPane.YES_NO_OPTION);
         if (confirm != JOptionPane.YES_OPTION) {
             return;
         }
 
-        // 获取课程ID
         int courseId = (int) tableModel.getValueAt(selectedRow, 0);
-        Connection conn = null;
-        PreparedStatement pstmt = null;
 
         try {
-            conn = DerbyDbUtil.getConnection();
-            pstmt = conn.prepareStatement(DerbySQL.deleteCourseSQL);
-            pstmt.setInt(1, courseId);
-
-            // 执行删除（影响行数>0说明成功）
-            int affectedRows = pstmt.executeUpdate();
-            if (affectedRows > 0) {
+            boolean success = courseDAO.deleteCourseById(courseId);
+            if (success) {
                 JOptionPane.showMessageDialog(this, "课程删除成功！", "成功", JOptionPane.INFORMATION_MESSAGE);
-                loadCourseData(); // 刷新表格
+                loadCourseData();
             } else {
                 JOptionPane.showMessageDialog(this, "课程删除失败！", "失败", JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "删除课程异常！\n" + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
-        } finally {
-            DerbyDbUtil.closeAll(null, pstmt, conn);
         }
     }
 
@@ -419,53 +405,24 @@ public class CourseManageFrame extends JInternalFrame {
             PreparedStatement pstmt = null;
 
             try {
-                conn = DerbyDbUtil.getConnection();
+                int generatedCourseId = courseDAO.insertCourse(name, credit, hours, desc, teacherId);
 
-                // 首先插入课程信息，要求返回生成的键值
-                pstmt = conn.prepareStatement(DerbySQL.insertCourseSQL, PreparedStatement.RETURN_GENERATED_KEYS);
-                pstmt.setString(1, name);
-                pstmt.setBigDecimal(2, credit);
-                pstmt.setInt(3, hours);
-                pstmt.setString(4, desc.isEmpty() ? null : desc);
-                pstmt.setObject(5, teacherId); // 允许为null
-
-                int affectedRows = pstmt.executeUpdate();
-
-                // 获取生成的课程ID
-                int generatedCourseId = -1;
-                if (affectedRows > 0) {
-                    try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
-                        if (generatedKeys.next()) {
-                            generatedCourseId = generatedKeys.getInt(1);
+                if (generatedCourseId != -1) {
+                    if (teacherId != null) {
+                        boolean success = courseDAO.insertTeacherCourse(teacherId, generatedCourseId, "2025-2026", 2025);
+                        if (!success) {
+                            JOptionPane.showMessageDialog(this, "新增课程部分成功，教师关联失败！", "警告", JOptionPane.WARNING_MESSAGE);
                         }
                     }
-                }
-
-                // 如果课程插入成功，且选择了教师，则插入教师课程关联信息
-                if (affectedRows > 0 && teacherId != null && generatedCourseId != -1) {
-                    // 插入教师课程关联信息
-                    pstmt = conn.prepareStatement(DerbySQL.insertTeacherCourseSQL);
-                    pstmt.setObject(1, teacherId);
-                    pstmt.setObject(2, generatedCourseId); // 使用生成的课程ID
-                    pstmt.setString(3, "2025-2026");
-                    pstmt.setInt(4, 2025); // 假设当前为2025年
-
-                    pstmt.executeUpdate();
-
                     JOptionPane.showMessageDialog(this, "新增课程成功！", "成功", JOptionPane.INFORMATION_MESSAGE);
-                } else if (affectedRows > 0) {
-                    JOptionPane.showMessageDialog(this, "新增课程成功！", "成功", JOptionPane.INFORMATION_MESSAGE);
+                    dispose();
+                    loadCourseData();
                 } else {
                     JOptionPane.showMessageDialog(this, "新增课程失败！", "失败", JOptionPane.ERROR_MESSAGE);
                 }
-
-                dispose(); // 关闭弹窗
-                loadCourseData(); // 刷新表格
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "新增课程异常！\n" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
-            } finally {
-                DerbyDbUtil.closeAll(null, pstmt, conn);
             }
         }
 
@@ -478,23 +435,9 @@ public class CourseManageFrame extends JInternalFrame {
             String selectedTeacher = (String) teacherCombo.getSelectedItem();
             Integer teacherId = teacherMap.get(selectedTeacher);
 
-            Connection conn = null;
-            PreparedStatement pstmt = null;
-
             try {
-                conn = DerbyDbUtil.getConnection();
-                pstmt = conn.prepareStatement(DerbySQL.updateCourseSQL);
-                // 填充SQL参数（对应update语句的字段顺序，最后是course_id）
-                pstmt.setString(1, name);
-                pstmt.setBigDecimal(2, credit);
-                pstmt.setInt(3, hours);
-                pstmt.setString(4, desc.isEmpty() ? null : desc);
-                pstmt.setObject(5, teacherId);
-                pstmt.setInt(6, courseId); // 条件：课程ID
-
-                // 执行更新
-                int affectedRows = pstmt.executeUpdate();
-                if (affectedRows > 0) {
+                boolean success = courseDAO.updateCourse(courseId, name, credit, hours, desc, teacherId);
+                if (success) {
                     JOptionPane.showMessageDialog(this, "修改课程成功！", "成功", JOptionPane.INFORMATION_MESSAGE);
                     dispose();
                     loadCourseData();
@@ -504,8 +447,6 @@ public class CourseManageFrame extends JInternalFrame {
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "修改课程异常！\n" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
-            } finally {
-                DerbyDbUtil.closeAll(null, pstmt, conn);
             }
         }
     }
@@ -528,39 +469,25 @@ public class CourseManageFrame extends JInternalFrame {
         int courseId = (int) tableModel.getValueAt(selectedRow, 0);
         String courseName = tableModel.getValueAt(selectedRow, 1).toString();
 
-        // 4. 校验是否已选该课程（避免重复选课）
-        if (isCourseSelected(studentId, courseId)) {
-            JOptionPane.showMessageDialog(this, "你已选过「" + courseName + "」，不可重复选课！", "提示", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // 5. 获取该课程的授课记录ID（必须有授课教师才能选课）
-        Integer teacherCourseId = getFirstTeacherCourseId(courseId);
-        if (teacherCourseId == null) {
-            JOptionPane.showMessageDialog(this, "「" + courseName + "」暂无授课记录，无法选课！", "失败", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // 6. 确认选课
-        int confirm = JOptionPane.showConfirmDialog(this, "确定要选「" + courseName + "」吗？", "确认选课", JOptionPane.YES_NO_OPTION);
-        if (confirm != JOptionPane.YES_OPTION) {
-            return;
-        }
-
-        // 7. 执行选课（插入student_courses记录）
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-
         try {
-            conn = DerbyDbUtil.getConnection();
-            pstmt = conn.prepareStatement(DerbySQL.insertStudentCourseSQL);
-            pstmt.setInt(1, studentId);          // 学生ID
-            pstmt.setInt(2, teacherCourseId);    // 授课记录ID
-            pstmt.setString(3, getCurrentTime());// 选课时间（当前时间）
+            if (courseDAO.isCourseSelectedByStudent(studentId, courseId)) {
+                JOptionPane.showMessageDialog(this, "你已选过「" + courseName + "」，不可重复选课！", "提示", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
-            // 8. 执行插入
-            int affectedRows = pstmt.executeUpdate();
-            if (affectedRows > 0) {
+            Integer teacherCourseId = courseDAO.getFirstTeacherCourseId(courseId);
+            if (teacherCourseId == null) {
+                JOptionPane.showMessageDialog(this, "「" + courseName + "」暂无授课记录，无法选课！", "失败", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            int confirm = JOptionPane.showConfirmDialog(this, "确定要选「" + courseName + "」吗？", "确认选课", JOptionPane.YES_NO_OPTION);
+            if (confirm != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            boolean success = courseDAO.insertStudentCourse(studentId, teacherCourseId, getCurrentTime());
+            if (success) {
                 JOptionPane.showMessageDialog(this, "选课成功！可前往「已选课程」查看", "成功", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this, "选课失败！", "失败", JOptionPane.ERROR_MESSAGE);
@@ -568,8 +495,6 @@ public class CourseManageFrame extends JInternalFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "选课异常！\n" + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
-        } finally {
-            DerbyDbUtil.closeAll(null, pstmt, conn);
         }
     }
 

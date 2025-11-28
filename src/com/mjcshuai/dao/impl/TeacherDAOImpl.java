@@ -13,6 +13,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 教师管理相关接口
+ * @author mjc
+ * @date 2025/11/29
+ */
 public class TeacherDAOImpl implements TeacherDAO {
 
     /**

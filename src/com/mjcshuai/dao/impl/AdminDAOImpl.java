@@ -11,6 +11,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * 管理员管理相关接口
+ * @author mjc
+ * @date 2025/11/29
+ */
 public class AdminDAOImpl implements AdminDAO {
 
     /**
