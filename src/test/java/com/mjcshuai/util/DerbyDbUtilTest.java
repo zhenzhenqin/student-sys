@@ -2,10 +2,11 @@ package test.java.com.mjcshuai.util;
 
 import com.mjcshuai.util.DerbyDbUtil;
 import org.junit.jupiter.api.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Derby数据库工具类测试")
@@ -59,8 +60,94 @@ public class DerbyDbUtilTest {
         }
     }
 
+    //新增 63 -150
     @Test
     @Order(3)
+    @DisplayName("验证建表脚本执行：检查关键表是否存在")
+    void testTablesCreated() {
+        try {
+            connection = DerbyDbUtil.getConnection();
+            DatabaseMetaData metaData = connection.getMetaData();
+
+            // 定义你的 SQL 脚本中创建的所有表名 (Derby 内部通常存为大写)
+            String[] expectedTables = {
+                    "ADMIN",
+                    "TEACHER",
+                    "STUDENT",
+                    "COURSES",
+                    "TEACHER_COURSES",
+                    "STUDENT_COURSES"
+            };
+
+            List<String> missingTables = new ArrayList<>();
+            for (String tableName : expectedTables) {
+                // 参数：catalog, schemaPattern, tableNamePattern, types
+                ResultSet rs = metaData.getTables(null, null, tableName, new String[]{"TABLE"});
+                if (!rs.next()) {
+                    missingTables.add(tableName);
+                }
+                rs.close();
+            }
+
+            assertTrue(missingTables.isEmpty(),
+                    "以下表未找到，说明 SQL 建表脚本可能未执行或执行失败: " + missingTables);
+
+            // System.out.println("所有预期的数据表均已存在！");
+
+        } catch (SQLException e) {
+            fail("检查表结构时发生异常: " + e.getMessage());
+        }
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("验证初始化数据：检查管理员账号")
+    void testAdminDataInit() {
+        try {
+            connection = DerbyDbUtil.getConnection();
+            String sql = "SELECT * FROM admin WHERE name = ?";
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                pstmt.setString(1, "admin");
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    assertTrue(rs.next(), "未找到管理员账号 'admin'，初始化数据插入失败");
+                    assertEquals("1234", rs.getString("password"), "管理员密码与脚本中定义的不一致");
+                }
+            }
+        } catch (SQLException e) {
+            fail("验证管理员数据时失败: " + e.getMessage());
+        }
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("验证关联数据：检查学生选课与课程数据")
+    void testComplexDataInit() {
+        try {
+            connection = DerbyDbUtil.getConnection();
+            // 验证课程是否存在
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery("SELECT count(*) FROM courses");
+                if (rs.next()) {
+                    int count = rs.getInt(1);
+                    assertTrue(count > 0, "课程表(courses)为空，未插入测试数据");
+                }
+            }
+
+            // 验证学生是否已关联选课 (脚本中 student_courses 表有数据)
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery("SELECT count(*) FROM student_courses");
+                if (rs.next()) {
+                    int count = rs.getInt(1);
+                    assertTrue(count > 0, "学生选课表(student_courses)为空，关联数据插入失败");
+                }
+            }
+        } catch (SQLException e) {
+            fail("验证复杂数据关联时失败: " + e.getMessage());
+        }
+    }
+
+    @Test
+    @Order(6)
     @DisplayName("测试关闭所有资源")
     void testCloseAllResources() {
         try {
@@ -86,7 +173,7 @@ public class DerbyDbUtilTest {
     }
 
     @Test
-    @Order(4)
+    @Order(7)
     @DisplayName("测试关闭部分为null的资源")
     void testCloseAllWithNullResources() {
         // 测试当某些资源为null时不会抛出异常
@@ -102,7 +189,7 @@ public class DerbyDbUtilTest {
     }
 
     @Test
-    @Order(5)
+    @Order(8)
     @DisplayName("测试Derby数据库关闭功能")
     void testShutdownDerby() {
         // 测试关闭Derby数据库功能

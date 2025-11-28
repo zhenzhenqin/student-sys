@@ -2,11 +2,12 @@ package com.mjcshuai.util;
 
 import com.mjcshuai.resource.DbProperties;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.sql.*;
 
 /**
  * Apache Derby 数据库工具类（嵌入式模式）
@@ -21,10 +22,11 @@ public class DerbyDbUtil {
     private static final String USER = DbProperties.Derby_USERNAME;
     private static final String PASSWORD = DbProperties.Derby_PASSWORD;
 
-    // 静态加载驱动（JDK1.8+ 可省略，但为兼容建议保留）
+    // 静态加载驱动
     static {
         try {
             Class.forName(DRIVER);
+            initDatabase();
             //System.out.println("Derby 驱动加载成功！");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Derby 驱动加载失败！请检查依赖是否正确", e);
@@ -38,6 +40,107 @@ public class DerbyDbUtil {
         Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
         //System.out.println("Derby 数据库连接成功！");
         return conn;
+    }
+
+    //新增 45 - 150
+    /**
+     * 核心逻辑：初始化数据库
+     * 检查 admin 表是否存在，如果不存在，则执行 SQL 脚本建表
+     */
+    private static void initDatabase() {
+        Connection conn = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+
+            // 1. 检查关键表 'admin' 是否已经存在
+            DatabaseMetaData meta = conn.getMetaData();
+            // Derby 中表名通常存储为大写
+            rs = meta.getTables(null, null, "ADMIN", null);
+
+            if (rs.next()) {
+                // System.out.println("检测到数据库表已存在，跳过初始化。");
+                return;
+            }
+
+            System.out.println("检测到空数据库，开始执行初始化脚本...");
+            executeSqlScript(conn, DbProperties.SQL_FILE_PATH);
+            System.out.println("数据库初始化完成！");
+
+        } catch (SQLException e) {
+            System.err.println("数据库初始化检查失败：" + e.getMessage());
+        } finally {
+            closeAll(rs, null, conn);
+        }
+    }
+
+    /**
+     * 读取并执行 SQL 文件
+     */
+    private static void executeSqlScript(Connection conn, String filePath) {
+        File sqlFile = new File(filePath);
+        if (!sqlFile.exists()) {
+            System.err.println("警告：找不到初始化SQL文件: " + sqlFile.getAbsolutePath());
+            return;
+        }
+
+        Statement stmt = null;
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(new FileInputStream(sqlFile), StandardCharsets.UTF_8))) {
+
+            conn.setAutoCommit(false); // 开启事务，保证原子性
+            stmt = conn.createStatement();
+
+            StringBuilder command = new StringBuilder();
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                // 去除两端空格
+                String trimmedLine = line.trim();
+
+                // 跳过空行和注释行（-- 开头）
+                if (trimmedLine.isEmpty() || trimmedLine.startsWith("--")) {
+                    continue;
+                }
+
+                // 处理行内注释（简单处理，去掉 -- 及其后面的内容）
+                if (trimmedLine.contains("--")) {
+                    trimmedLine = trimmedLine.substring(0, trimmedLine.indexOf("--")).trim();
+                }
+
+                command.append(trimmedLine);
+                command.append(" "); // 防止换行导致粘连
+
+                // 如果行末是分号，则认为是一条完整的 SQL 语句
+                if (trimmedLine.endsWith(";")) {
+                    // 去掉最后的分号
+                    String sql = command.toString().replace(";", "").trim();
+                    if (!sql.isEmpty()) {
+                        // System.out.println("Executing: " + sql); // 调试用
+                        stmt.execute(sql);
+                    }
+                    command.setLength(0); // 清空 StringBuilder，准备下一条语句
+                }
+            }
+
+            conn.commit(); // 提交事务
+
+        } catch (Exception e) {
+            System.err.println("SQL脚本执行出错：" + e.getMessage());
+            e.printStackTrace();
+            try {
+                conn.rollback(); // 出错回滚
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        } finally {
+            try {
+                if (stmt != null) stmt.close();
+                conn.setAutoCommit(true); // 恢复自动提交
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
