@@ -2,8 +2,6 @@ package test.java.com.mjcshuai.dao;
 
 import com.mjcshuai.dao.TeacherDAO;
 import com.mjcshuai.dao.impl.TeacherDAOImpl;
-import com.mjcshuai.model.Admin;
-import com.mjcshuai.model.Student;
 import com.mjcshuai.model.Teacher;
 import com.mjcshuai.util.DerbyDbUtil;
 import org.junit.jupiter.api.AfterEach;

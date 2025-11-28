@@ -13,6 +13,12 @@ import java.sql.SQLException;
 
 public class AdminDAOImpl implements AdminDAO {
 
+    /**
+     * 管理员登录
+     * @param username 用户名
+     * @param password 密码
+     * @return 管理员对象
+     */
     @Override
     public Admin login(String username, String password) {
         Connection conn = null;

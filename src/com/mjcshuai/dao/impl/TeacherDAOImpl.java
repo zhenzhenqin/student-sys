@@ -15,6 +15,12 @@ import java.util.List;
 
 public class TeacherDAOImpl implements TeacherDAO {
 
+    /**
+     * 教师登录
+     * @param username 用户名
+     * @param password 密码
+     * @return 教师对象
+     */
     @Override
     public Teacher login(String username, String password) {
         Connection conn = null;
@@ -50,7 +56,10 @@ public class TeacherDAOImpl implements TeacherDAO {
         return teacher;
     }
 
-    // 新增：查询所有教师
+    /**
+     * 查询所有教师
+     * @return 教师列表
+     */
     @Override
     public List<Teacher> findAllTeachers() {
         Connection conn = null;
@@ -90,7 +99,11 @@ public class TeacherDAOImpl implements TeacherDAO {
         return teacherList;
     }
 
-    // 新增教师
+    /**
+     * 新增教师
+     * @param teacher 教师对象
+     * @return 是否新增成功
+     */
     @Override
     public boolean addTeacher(Teacher teacher) {
         Connection conn = null;
@@ -118,7 +131,11 @@ public class TeacherDAOImpl implements TeacherDAO {
         }
     }
 
-    // 更新教师
+    /**
+     * 更新教师
+     * @param teacher 教师对象
+     * @return 是否更新成功
+     */
     @Override
     public boolean updateTeacher(Teacher teacher) {
         Connection conn = null;
@@ -147,7 +164,11 @@ public class TeacherDAOImpl implements TeacherDAO {
         }
     }
 
-    // 删除教师
+    /**
+     * 删除教师
+     * @param id 教师ID
+     * @return 是否删除成功
+     */
     @Override
     public boolean deleteTeacher(Integer id) {
         Connection conn = null;
