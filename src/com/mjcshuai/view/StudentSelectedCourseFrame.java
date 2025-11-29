@@ -1,6 +1,6 @@
 package com.mjcshuai.view;
 
-import com.mjcshuai.resource.DerbySQL;
+import com.mjcshuai.constant.DerbySQL;
 import com.mjcshuai.util.DerbyDbUtil;
 import com.mjcshuai.util.UserContext;
 import com.mjcshuai.model.Student; // 导入学生模型类
@@ -11,7 +11,6 @@ import java.awt.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class StudentSelectedCourseFrame extends JInternalFrame {
 

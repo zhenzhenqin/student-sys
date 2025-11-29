@@ -1,7 +1,7 @@
 package com.mjcshuai.dao.impl;
 
 import com.mjcshuai.dao.CourseDAO;
-import com.mjcshuai.resource.DerbySQL;
+import com.mjcshuai.constant.DerbySQL;
 import com.mjcshuai.util.DerbyDbUtil;
 
 import java.math.BigDecimal;

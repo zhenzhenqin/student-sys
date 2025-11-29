@@ -1,4 +1,4 @@
-package com.mjcshuai.resource;
+package com.mjcshuai.constant;
 
 public class DbProperties {
 

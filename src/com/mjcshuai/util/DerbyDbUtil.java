@@ -1,6 +1,6 @@
 package com.mjcshuai.util;
 
-import com.mjcshuai.resource.DbProperties;
+import com.mjcshuai.constant.DbProperties;
 
 import java.io.BufferedReader;
 import java.io.File;

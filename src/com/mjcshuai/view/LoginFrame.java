@@ -1,5 +1,6 @@
 package com.mjcshuai.view;
 
+import com.mjcshuai.constant.PromptConstant;
 import com.mjcshuai.model.Admin;
 import com.mjcshuai.model.Student;
 import com.mjcshuai.model.Teacher;
@@ -44,9 +45,10 @@ public class LoginFrame extends JFrame {
         gbc.insets = new Insets(15, 20, 15, 20); // 组件间距
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        //管理员账户提示
         JOptionPane.showMessageDialog(LoginFrame.this,
-                "The administrator account is 'admin' with the password '1234'. Students and teachers, please log in as the administrator to register.",
-                "Developer mjc (zhenzhenqin) friendly reminder",
+                PromptConstant.ADMIN_LOGIN_PROMPT,
+                PromptConstant.ADMIN_LOGIN_PROMPT_TITLE,
                 JOptionPane.INFORMATION_MESSAGE);
 
         // 使用HTML格式美化文本显示

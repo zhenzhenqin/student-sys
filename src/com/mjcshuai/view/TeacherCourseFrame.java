@@ -1,18 +1,15 @@
 package com.mjcshuai.view;
 
-import com.mjcshuai.resource.DerbySQL;
+import com.mjcshuai.constant.DerbySQL;
 import com.mjcshuai.util.DerbyDbUtil;
 import com.mjcshuai.util.UserContext;
 import com.mjcshuai.model.Teacher; // 必须导入你的Teacher模型类
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class TeacherCourseFrame extends JInternalFrame {
 

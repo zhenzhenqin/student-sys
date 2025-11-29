@@ -3,7 +3,7 @@ package com.mjcshuai.view;
 import com.mjcshuai.model.Teacher;
 import com.mjcshuai.dao.TeacherDAO;
 import com.mjcshuai.dao.impl.TeacherDAOImpl;
-import com.mjcshuai.resource.DerbySQL;
+import com.mjcshuai.constant.DerbySQL;
 import com.mjcshuai.util.DerbyDbUtil;
 //import com.mjcshuai.util.DbUtil;
 

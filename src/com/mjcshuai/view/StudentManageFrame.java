@@ -3,7 +3,7 @@ package com.mjcshuai.view;
 import com.mjcshuai.model.Student;
 import com.mjcshuai.dao.StudentDAO;
 import com.mjcshuai.dao.impl.StudentDAOImpl;
-import com.mjcshuai.resource.DerbySQL;
+import com.mjcshuai.constant.DerbySQL;
 //import com.mjcshuai.util.DbUtil;
 import com.mjcshuai.util.DerbyDbUtil;
 import javax.swing.*;

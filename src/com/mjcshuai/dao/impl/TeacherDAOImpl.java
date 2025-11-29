@@ -2,7 +2,7 @@ package com.mjcshuai.dao.impl;
 
 import com.mjcshuai.model.Teacher;
 import com.mjcshuai.dao.TeacherDAO;
-import com.mjcshuai.resource.DerbySQL;
+import com.mjcshuai.constant.DerbySQL;
 //import com.mjcshuai.util.DbUtil;
 import com.mjcshuai.util.DerbyDbUtil;
 
