@@ -229,7 +229,10 @@ public class PersonalInfoFrame extends JInternalFrame {
                 saveTeacherInfo(); // 保存教师信息
             } else if (loginAdmin != null){
                 //如果是管理元修改自己信息 则无法成功 管理员信息固定 便于登录
-
+                JOptionPane.showMessageDialog(PersonalInfoFrame.this,
+                                                "Administrator information cannot be modified",
+                                                "mjc prompt",
+                                                    JOptionPane.WARNING_MESSAGE);
             }
         }
 
