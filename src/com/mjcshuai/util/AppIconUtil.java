@@ -10,7 +10,7 @@ import java.net.URL;
  * 窗口图标相关工具类
  * 提供加载应用图标和设置窗口图标功能
  * author: mjc
- * createTime: 2023-12-20
+ * createTime: 2025-11-30
  */
 public class AppIconUtil {
 
@@ -22,7 +22,7 @@ public class AppIconUtil {
      */
     public static Image loadAppIcon() {
         try {
-            URL iconUrl = App.class.getResource("resource/icon.png");
+            URL iconUrl = App.class.getResource("Icon/icon.png");
             if (iconUrl != null) {
                 appIcon = new ImageIcon(iconUrl).getImage();
             }

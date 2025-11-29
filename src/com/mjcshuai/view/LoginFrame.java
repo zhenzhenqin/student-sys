@@ -16,6 +16,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.net.URI;
 import java.net.URL;
 
@@ -101,6 +103,43 @@ public class LoginFrame extends JFrame {
 
         add(mainPanel);
 
+        /**
+         * 以下逻辑为键盘按键监听事件绑定
+         * author: mjc
+         * date: 2025-10-30
+         */
+        // 启用键盘事件监听
+        setFocusable(true);
+        requestFocusInWindow(); // 确保窗体获得焦点
+
+        // 添加键盘监听器实现右键切换角色
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_RIGHT) { //按下右键向下一个切换角色
+                    switchRole();
+                }
+            }
+        });
+
+        // 给用户名输入框添加回车键监听
+        usernameField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // 焦点转移到密码输入框
+                passwordField.requestFocus();
+            }
+        });
+
+        // 给密码输入框添加回车键监听
+        passwordField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // 触发登录按钮的点击事件
+                loginButton.doClick();
+            }
+        });
+
         // 登录按钮点击事件
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -161,6 +200,17 @@ public class LoginFrame extends JFrame {
                 }
             }
         });
+    }
+
+    // 添加角色切换方法 新增右键切换角色
+    private void switchRole() {
+        if (adminRadio.isSelected()) {
+            teacherRadio.setSelected(true);
+        } else if (teacherRadio.isSelected()) {
+            studentRadio.setSelected(true);
+        } else if (studentRadio.isSelected()) {
+            adminRadio.setSelected(true);
+        }
     }
 
     //此处用于展示跳转github仓库

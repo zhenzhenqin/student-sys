@@ -76,6 +76,8 @@ public class DerbyDbUtil {
 
     /**
      * 读取并执行 SQL 文件
+     * author: Gemini
+     * date: 2025-11-28
      */
     private static void executeSqlScript(Connection conn, String filePath) {
         File sqlFile = new File(filePath);
