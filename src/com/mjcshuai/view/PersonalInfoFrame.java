@@ -149,14 +149,19 @@ public class PersonalInfoFrame extends JInternalFrame {
             gbc.gridx = 1;
             mainPanel.add(ageField, gbc);
         } else if(loginAdmin != null) { //管理猿角色yeah！！！ ----mjc
+            nameField.setEditable(false);
+            sexField.setEditable(false);
             AdminPwdLabel = new JLabel("密码：");
             AdminPwdField = new JTextField(20);
+            AdminPwdField.setEditable(false);
 
             dateLabel = new JLabel("创建日期：");
             dateField = new JTextField(20);
+            dateField.setEditable(false);
 
             remarkLabel = new JLabel("说明：");
             remarkField = new JTextField(20);
+            remarkField.setEditable(false);
 
             gbc.gridx = 0;
             gbc.gridy = row++;
@@ -222,6 +227,9 @@ public class PersonalInfoFrame extends JInternalFrame {
                 saveStudentInfo(); // 保存学生信息
             } else if (loginTeacher != null) {
                 saveTeacherInfo(); // 保存教师信息
+            } else if (loginAdmin != null){
+                //如果是管理元修改自己信息 则无法成功 管理员信息固定 便于登录
+
             }
         }
 
