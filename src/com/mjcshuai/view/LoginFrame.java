@@ -42,6 +42,11 @@ public class LoginFrame extends JFrame {
         gbc.insets = new Insets(15, 20, 15, 20); // 组件间距
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        JOptionPane.showMessageDialog(LoginFrame.this,
+                "The administrator account is 'admin' with the password '1234'. Students and teachers, please log in as the administrator to register.",
+                "Developer mjc (zhenzhenqin) friendly reminder",
+                JOptionPane.INFORMATION_MESSAGE);
+
         // 1. 角色选择区（单选按钮组）
         JPanel rolePanel = new JPanel();
         adminRadio = new JRadioButton("管理员", true); // 默认选中
