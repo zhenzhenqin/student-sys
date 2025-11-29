@@ -110,6 +110,9 @@ public class MainFrame extends JFrame {
         desktopPane = new JDesktopPane();
         desktopPane.setBackground(Color.WHITE);
 
+        // 添加居中的GitHub链接
+        addCenterGithubLink();
+
         // 添加 GitHub 图标链接
         addGithubLink();
 
@@ -228,5 +231,105 @@ public class MainFrame extends JFrame {
             desktopPane.add(githubLabel);
         }
     }
+
+
+    // 添加居中的GitHub链接面板
+    private void addCenterGithubLink() {
+        try {
+            // 创建透明面板
+            JPanel centerPanel = new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    // 设置透明背景
+                    g.setColor(new Color(255, 255, 255, 180)); // 半透明白色背景
+                    g.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+                }
+            };
+            centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+            centerPanel.setOpaque(false);
+            centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+
+            // 加载GitHub图标
+            ImageIcon githubIcon = new ImageIcon(new URL("https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"));
+            Image scaledImage = githubIcon.getImage().getScaledInstance(48, 48, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+            // 创建图标标签
+            JLabel iconLabel = new JLabel(scaledIcon);
+            iconLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            // 创建文本标签
+            JLabel textLabel = new JLabel("Visit Our GitHub Repository");
+            textLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
+            textLabel.setForeground(new Color(51, 51, 51));
+            textLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            JLabel urlLabel = new JLabel("github.com/zhenzhenqin/student-sys");
+            urlLabel.setFont(new Font("微软雅黑", Font.PLAIN, 10));
+            urlLabel.setForeground(Color.GRAY);
+            urlLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            // 添加间距
+            centerPanel.add(iconLabel);
+            centerPanel.add(Box.createVerticalStrut(5));
+            centerPanel.add(textLabel);
+            centerPanel.add(Box.createVerticalStrut(3));
+            centerPanel.add(urlLabel);
+
+            // 设置面板大小和位置（居中偏下）
+            centerPanel.setBounds(
+                    (desktopPane.getWidth() - 200) / 2,
+                    (desktopPane.getHeight() - 100) / 2 + 50,
+                    200, 100
+            );
+
+            // 添加鼠标手势和点击事件
+            centerPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            centerPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    try {
+                        Desktop.getDesktop().browse(new URI("https://github.com/zhenzhenqin/student-sys"));
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(MainFrame.this,
+                                "无法打开浏览器，请手动访问:\nhttps://github.com/zhenzhenqin/student-sys",
+                                "提示", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+
+                public void mouseEntered(java.awt.event.MouseEvent evt) {
+                    // 鼠标悬停效果
+                    centerPanel.setOpaque(true);
+                    centerPanel.setBackground(new Color(240, 240, 240));
+                    centerPanel.repaint();
+                }
+
+                public void mouseExited(java.awt.event.MouseEvent evt) {
+                    // 恢复原状
+                    centerPanel.setOpaque(false);
+                    centerPanel.repaint();
+                }
+            });
+
+            // 添加到桌面面板
+            desktopPane.add(centerPanel);
+
+            // 监听窗口大小变化以保持居中位置
+            desktopPane.addComponentListener(new java.awt.event.ComponentAdapter() {
+                public void componentResized(java.awt.event.ComponentEvent evt) {
+                    centerPanel.setBounds(
+                            (desktopPane.getWidth() - 200) / 2,
+                            (desktopPane.getHeight() - 100) / 2 + 50,
+                            200, 100
+                    );
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 如果图片加载失败，则不显示中心链接
+        }
+    }
+
 
 }
