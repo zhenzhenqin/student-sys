@@ -1,5 +1,6 @@
 package com.mjcshuai.view;
 
+import com.mjcshuai.util.AppIconUtil;
 import com.mjcshuai.util.UserContext;
 
 import javax.swing.*;
@@ -16,6 +17,7 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         userContext = UserContext.getInstance();
+        AppIconUtil.setWindowIcon(this); // 设置主窗口图标
         initFrame();
         initMenuBar();
         initDesktop();
