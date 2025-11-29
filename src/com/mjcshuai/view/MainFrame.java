@@ -4,6 +4,8 @@ import com.mjcshuai.util.UserContext;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URI;
+import java.net.URL;
 
 /**
  * 系统主界面 - 根据角色权限动态显示菜单
@@ -107,6 +109,10 @@ public class MainFrame extends JFrame {
     private void initDesktop() {
         desktopPane = new JDesktopPane();
         desktopPane.setBackground(Color.WHITE);
+
+        // 添加 GitHub 图标链接
+        addGithubLink();
+
         add(desktopPane, BorderLayout.CENTER);
     }
 
@@ -140,4 +146,87 @@ public class MainFrame extends JFrame {
             new LoginFrame().setVisible(true); // 打开登录界面
         }
     }
+
+
+    // 添加 GitHub 链接图标和URL
+    private void addGithubLink() {
+        try {
+            // 加载 GitHub 图标
+            ImageIcon githubIcon = new ImageIcon(new URL("https://github.githubassets.com/favicons/favicon.png"));
+            // 缩放图标
+            Image scaledImage = githubIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+            // 创建图标标签
+            JLabel githubLabel = new JLabel(scaledIcon);
+            githubLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            githubLabel.setToolTipText("访问 GitHub 仓库");
+
+            // 创建URL标签
+            JLabel urlLabel = new JLabel("github.com/zhenzhenqin");
+            urlLabel.setFont(new Font("微软雅黑", Font.PLAIN, 10));
+            urlLabel.setForeground(Color.GRAY);
+            urlLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+            // 创建包含图标和URL的面板
+            JPanel githubPanel = new JPanel();
+            githubPanel.setLayout(new BoxLayout(githubPanel, BoxLayout.Y_AXIS));
+            githubPanel.setOpaque(false);
+            githubPanel.add(githubLabel);
+            githubPanel.add(Box.createVerticalStrut(2)); // 添加垂直间距
+            githubPanel.add(urlLabel);
+            githubPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+
+            // 将面板添加到desktopPane
+            githubPanel.setBounds(desktopPane.getWidth() - 120, desktopPane.getHeight() - 60, 100, 50);
+            desktopPane.add(githubPanel);
+
+            // 添加点击事件到整个面板
+            java.awt.event.MouseAdapter mouseAdapter = new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    try {
+                        Desktop.getDesktop().browse(new URI("https://github.com/zhenzhenqin/student-sys"));
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(MainFrame.this,
+                                "无法打开浏览器，请手动访问:\nhttps://github.com/zhenzhenqin/student-sys",
+                                "提示", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            };
+
+            githubLabel.addMouseListener(mouseAdapter);
+            urlLabel.addMouseListener(mouseAdapter);
+
+            // 监听窗口大小变化以保持位置
+            desktopPane.addComponentListener(new java.awt.event.ComponentAdapter() {
+                public void componentResized(java.awt.event.ComponentEvent evt) {
+                    githubPanel.setBounds(desktopPane.getWidth() - 120, desktopPane.getHeight() - 60, 100, 50);
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 如果图标加载失败，添加简化版链接
+            JLabel githubLabel = new JLabel("GitHub: github.com/zhenzhenqin");
+            githubLabel.setFont(new Font("微软雅黑", Font.PLAIN, 10));
+            githubLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            githubLabel.setForeground(Color.BLUE.darker());
+
+            githubLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    try {
+                        Desktop.getDesktop().browse(new URI("https://github.com/zhenzhenqin/student-sys"));
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(MainFrame.this,
+                                "无法打开浏览器，请手动访问:\nhttps://github.com/zhenzhenqin/student-sys",
+                                "提示", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            });
+
+            githubLabel.setBounds(desktopPane.getWidth() - 150, desktopPane.getHeight() - 30, 140, 20);
+            desktopPane.add(githubLabel);
+        }
+    }
+
 }
