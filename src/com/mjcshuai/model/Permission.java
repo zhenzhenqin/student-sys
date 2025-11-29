@@ -1,7 +1,7 @@
 package com.mjcshuai.model;
 
 /**
- * 权限枚举类 - 优化后与功能模块精准对应
+ * 权限枚举类
  * author:mjc
  * date:2025-11-21
  */

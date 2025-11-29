@@ -1,5 +1,6 @@
 package com.mjcshuai.view;
 
+import com.mjcshuai.model.Admin;
 import com.mjcshuai.model.Student;
 import com.mjcshuai.model.Teacher;
 import com.mjcshuai.dao.StudentDAO;
@@ -18,19 +19,24 @@ import java.awt.event.ActionListener;
  */
 public class PersonalInfoFrame extends JInternalFrame {
     // 组件声明（根据角色动态显示）
-    private JLabel idLabel, nameLabel, sexLabel, pwdLabel;
+    private JLabel idLabel, nameLabel, sexLabel, pwdLabel, AdminPwdLabel;
     private JTextField idField, nameField, sexField;
     private JPasswordField pwdField;
+    private JTextField AdminPwdField;
     // 学生特有字段
     private JLabel classIdLabel;
     private JTextField classIdField;
     // 教师特有字段
     private JLabel titleLabel, ageLabel;
     private JTextField titleField, ageField;
+    //管理员持有字段
+    private JLabel dateLabel, remarkLabel;
+    private JTextField dateField, remarkField;
 
     private UserContext userContext;
     private Student loginStudent; // 登录学生（角色为学生时非空）
     private Teacher loginTeacher; // 登录教师（角色为教师时非空）
+    private Admin loginAdmin; //登录管理员（角色为管理员非空）
 
     // DAO实例
     private StudentDAO studentDAO = new StudentDAOImpl();
@@ -52,6 +58,8 @@ public class PersonalInfoFrame extends JInternalFrame {
             loginStudent = (Student) loginUser;
         } else if (loginUser instanceof Teacher) {
             loginTeacher = (Teacher) loginUser;
+        } else if(loginUser instanceof Admin){
+            loginAdmin = (Admin) loginUser;
         }
     }
 
@@ -73,9 +81,6 @@ public class PersonalInfoFrame extends JInternalFrame {
         sexLabel = new JLabel("性别：");
         sexField = new JTextField(20);
 
-        pwdLabel = new JLabel("密码：");
-        pwdField = new JPasswordField(20);
-
         // 添加公共字段到面板
         int row = 0;
         gbc.gridx = 0;
@@ -96,16 +101,20 @@ public class PersonalInfoFrame extends JInternalFrame {
         gbc.gridx = 1;
         mainPanel.add(sexField, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = row++;
-        mainPanel.add(pwdLabel, gbc);
-        gbc.gridx = 1;
-        mainPanel.add(pwdField, gbc);
 
         // 根据角色添加特有字段
         if (loginStudent != null) { // 学生角色
+            pwdLabel = new JLabel("密码：");
+            pwdField = new JPasswordField(20);
+
             classIdLabel = new JLabel("班级ID：");
             classIdField = new JTextField(20);
+
+            gbc.gridx = 0;
+            gbc.gridy = row++;
+            mainPanel.add(pwdLabel, gbc);
+            gbc.gridx = 1;
+            mainPanel.add(pwdField, gbc);
 
             gbc.gridx = 0;
             gbc.gridy = row++;
@@ -113,11 +122,20 @@ public class PersonalInfoFrame extends JInternalFrame {
             gbc.gridx = 1;
             mainPanel.add(classIdField, gbc);
         } else if (loginTeacher != null) { // 教师角色
+            pwdLabel = new JLabel("密码：");
+            pwdField = new JPasswordField(20);
+
             titleLabel = new JLabel("职称：");
             titleField = new JTextField(20);
 
             ageLabel = new JLabel("年龄：");
             ageField = new JTextField(20);
+
+            gbc.gridx = 0;
+            gbc.gridy = row++;
+            mainPanel.add(pwdLabel, gbc);
+            gbc.gridx = 1;
+            mainPanel.add(pwdField, gbc);
 
             gbc.gridx = 0;
             gbc.gridy = row++;
@@ -130,6 +148,33 @@ public class PersonalInfoFrame extends JInternalFrame {
             mainPanel.add(ageLabel, gbc);
             gbc.gridx = 1;
             mainPanel.add(ageField, gbc);
+        } else if(loginAdmin != null) { //管理猿角色yeah！！！ ----mjc
+            AdminPwdLabel = new JLabel("密码：");
+            AdminPwdField = new JTextField(20);
+
+            dateLabel = new JLabel("创建日期：");
+            dateField = new JTextField(20);
+
+            remarkLabel = new JLabel("说明：");
+            remarkField = new JTextField(20);
+
+            gbc.gridx = 0;
+            gbc.gridy = row++;
+            mainPanel.add(AdminPwdLabel, gbc);
+            gbc.gridx = 1;
+            mainPanel.add(AdminPwdField, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = row++;
+            mainPanel.add(dateLabel, gbc);
+            gbc.gridx = 1;
+            mainPanel.add(dateField, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = row++;
+            mainPanel.add(remarkLabel, gbc);
+            gbc.gridx = 1;
+            mainPanel.add(remarkField, gbc);
         }
 
         // 保存按钮
@@ -159,6 +204,13 @@ public class PersonalInfoFrame extends JInternalFrame {
             pwdField.setText(loginTeacher.getPassword());
             titleField.setText(loginTeacher.getTitle());
             ageField.setText(loginTeacher.getAge().toString());
+        } else if(loginAdmin != null){ //管理猿信息
+            idField.setText(loginAdmin.getId().toString());
+            nameField.setText(loginAdmin.getName());
+            sexField.setText("This is a very mysterious secret");
+            AdminPwdField.setText("Back to the time when I loved you");
+            dateField.setText("2025-11-21 10:00:00");
+            remarkField.setText("https://github.com/zhenzhenqin");
         }
     }
 
