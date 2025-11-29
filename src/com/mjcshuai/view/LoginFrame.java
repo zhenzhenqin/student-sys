@@ -15,6 +15,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URI;
+import java.net.URL;
 
 public class LoginFrame extends JFrame {
     private JRadioButton adminRadio;
@@ -46,6 +48,9 @@ public class LoginFrame extends JFrame {
                 "The administrator account is 'admin' with the password '1234'. Students and teachers, please log in as the administrator to register.",
                 "Developer mjc (zhenzhenqin) friendly reminder",
                 JOptionPane.INFORMATION_MESSAGE);
+
+        // 使用HTML格式美化文本显示
+        showGithubMessage();
 
         // 1. 角色选择区（单选按钮组）
         JPanel rolePanel = new JPanel();
@@ -154,5 +159,52 @@ public class LoginFrame extends JFrame {
                 }
             }
         });
+    }
+
+    //此处用于展示跳转github仓库
+    private void showGithubMessage() {
+        // 创建自定义面板
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        // 添加消息文本
+        JLabel messageLabel = new JLabel("Open source project address:");
+        JLabel urlLabel = new JLabel("<html><a href=''>https://github.com/zhenzhenqin/student-sys</a></html>");
+        urlLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JLabel tipLabel = new JLabel("Welcome to Star and contribute code");
+
+        // 尝试加载GitHub图标
+        try {
+            ImageIcon githubIcon = new ImageIcon(new URL("https://github.githubassets.com/favicons/favicon.png"));
+            // 缩放图标大小
+            Image scaledImage = githubIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(scaledImage);
+            urlLabel.setIcon(scaledIcon);
+            urlLabel.setHorizontalTextPosition(JLabel.RIGHT);
+            urlLabel.setIconTextGap(5);
+        } catch (Exception e) {
+            // 图标加载失败时忽略
+        }
+
+        // 为链接添加点击事件
+        urlLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                try {
+                    // 使用系统默认浏览器打开链接
+                    Desktop.getDesktop().browse(new URI("https://github.com/zhenzhenqin/student-sys"));
+                } catch (Exception ex) {
+                    // 如果无法打开浏览器，显示错误信息
+                    JOptionPane.showMessageDialog(LoginFrame.this,
+                            "Unable to open the browser automatically, please manually copy the following link:\nhttps://github.com/zhenzhenqin/student-sys",
+                            "warning", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        });
+
+        panel.add(messageLabel);
+        panel.add(urlLabel);
+        panel.add(tipLabel);
+
+        JOptionPane.showMessageDialog(this, panel, "Zhenzhenqin's prompt", JOptionPane.INFORMATION_MESSAGE);
     }
 }
