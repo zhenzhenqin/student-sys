@@ -8,6 +8,8 @@ import com.mjcshuai.util.UserContext;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.net.URI;
 import java.net.URL;
 
@@ -65,6 +67,14 @@ public class MainFrame extends JFrame {
 
         userInfoLabel.setFont(new Font("微软雅黑", Font.PLAIN, 12));
         userInfoLabel.setForeground(Color.BLACK);
+
+        // 添加鼠标手势和点击事件
+        userInfoLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        userInfoLabel.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
+                openInternalFrame(new PersonalInfoFrame(), "个人信息管理");
+            }
+        });
 
         userInfoPanel.add(userInfoLabel);
 
