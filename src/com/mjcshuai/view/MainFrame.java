@@ -58,11 +58,11 @@ public class MainFrame extends JFrame {
 
         //判断当前登录的用户信息
         if (loginAdmin != null){
-            userInfoLabel = new JLabel("欢迎您: " + loginAdmin.getName());
+            userInfoLabel = new JLabel("欢迎尊贵的管理猿: " + loginAdmin.getName());
         } else if (loginStudent != null){
-            userInfoLabel = new JLabel("欢迎您: " + loginStudent.getName());
+            userInfoLabel = new JLabel("亲爱的同学: " + loginStudent.getName());
         } else if (loginTeacher != null){
-            userInfoLabel = new JLabel("欢迎您: " + loginTeacher.getName());
+            userInfoLabel = new JLabel("亲爱的教师: " + loginTeacher.getName());
         }
 
         userInfoLabel.setFont(new Font("微软雅黑", Font.PLAIN, 12));
