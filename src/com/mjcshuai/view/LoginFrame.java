@@ -1,6 +1,7 @@
 package com.mjcshuai.view;
 
 import com.mjcshuai.constant.PromptConstant;
+import com.mjcshuai.context.BaseContext;
 import com.mjcshuai.model.Admin;
 import com.mjcshuai.model.Student;
 import com.mjcshuai.model.Teacher;
@@ -192,6 +193,7 @@ public class LoginFrame extends JFrame {
                     } else if (studentRadio.isSelected()) {
                         userContext.initUser(studentDAO.login(username, password));
                     }
+
                     // 关闭登录窗口，打开主界面
                     dispose();
                     new MainFrame().setVisible(true);

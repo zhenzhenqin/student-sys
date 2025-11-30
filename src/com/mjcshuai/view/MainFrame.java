@@ -1,5 +1,8 @@
 package com.mjcshuai.view;
 
+import com.mjcshuai.model.Admin;
+import com.mjcshuai.model.Student;
+import com.mjcshuai.model.Teacher;
 import com.mjcshuai.util.AppIconUtil;
 import com.mjcshuai.util.UserContext;
 
@@ -14,6 +17,11 @@ import java.net.URL;
 public class MainFrame extends JFrame {
     private JDesktopPane desktopPane; // 桌面面板（容纳内部窗口）
     private UserContext userContext;
+    private JLabel userInfoLabel; //显示用户登录账户信息
+    private Student loginStudent; // 登录学生（角色为学生时非空）
+    private Teacher loginTeacher; // 登录教师（角色为教师时非空）
+    private Admin loginAdmin; //登录管理员（角色为管理员非空）
+
 
     public MainFrame() {
         userContext = UserContext.getInstance();
@@ -30,6 +38,58 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(true);
+
+        initUser(); //判断当前登录的用户的身份信息
+
+        //显示当前登录用户信息
+        showUserInfo();
+    }
+
+    //添加用户信息方法
+    private void showUserInfo() {
+        // 创建一个面板来放置用户信息
+        JPanel userInfoPanel = new JPanel();
+        userInfoPanel.setOpaque(false);
+        userInfoPanel.setLayout(new BoxLayout(userInfoPanel, BoxLayout.X_AXIS));
+
+        // 创建用户信息标签
+
+        //判断当前登录的用户信息
+        if (loginAdmin != null){
+            userInfoLabel = new JLabel("欢迎您: " + loginAdmin.getName());
+        } else if (loginStudent != null){
+            userInfoLabel = new JLabel("欢迎您: " + loginStudent.getName());
+        } else if (loginTeacher != null){
+            userInfoLabel = new JLabel("欢迎您: " + loginTeacher.getName());
+        }
+
+        userInfoLabel.setFont(new Font("微软雅黑", Font.PLAIN, 12));
+        userInfoLabel.setForeground(Color.BLACK);
+
+        userInfoPanel.add(userInfoLabel);
+
+        // 将用户信息面板添加到窗口的右上角
+        userInfoPanel.setBounds(getWidth() - 200, 0, 180, 30);
+        add(userInfoPanel);
+
+        // 监听窗口大小变化以保持位置
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                userInfoPanel.setBounds(getWidth() - 200, 0, 180, 30);
+            }
+        });
+    }
+
+    //判断当前登录的用户信息
+    private void initUser() {
+        Object loginUser = userContext.getLoginUser();
+        if (loginUser instanceof Student) {
+            loginStudent = (Student) loginUser;
+        } else if (loginUser instanceof Teacher) {
+            loginTeacher = (Teacher) loginUser;
+        } else if(loginUser instanceof Admin){
+            loginAdmin = (Admin) loginUser;
+        }
     }
 
     // 初始化菜单条（根据权限动态显示菜单项）
