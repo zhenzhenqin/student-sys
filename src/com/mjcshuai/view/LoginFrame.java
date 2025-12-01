@@ -228,14 +228,28 @@ public class LoginFrame extends JFrame {
 
     // 添加角色切换方法 新增右键切换角色
     private void switchRole() {
+        JRadioButton oldSelected = null;
+        JRadioButton newSelected = null;
+
         if (adminRadio.isSelected()) {
-            teacherRadio.setSelected(true);
+            oldSelected = adminRadio;
+            newSelected = teacherRadio;
         } else if (teacherRadio.isSelected()) {
-            studentRadio.setSelected(true);
+            oldSelected = teacherRadio;
+            newSelected = studentRadio;
         } else if (studentRadio.isSelected()) {
-            adminRadio.setSelected(true);
+            oldSelected = studentRadio;
+            newSelected = adminRadio;
+        }
+
+        if (oldSelected != null && newSelected != null) {
+            // 添加简单的切换动画
+            newSelected.setSelected(true);
+            // 可以在这里添加更复杂的动画效果
         }
     }
+
+
 
     //此处用于展示跳转github仓库
     private void showGithubMessage() {
