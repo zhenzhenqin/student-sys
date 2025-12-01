@@ -25,6 +25,7 @@ public class MainFrame extends JFrame {
     private Student loginStudent; // 登录学生（角色为学生时非空）
     private Teacher loginTeacher; // 登录教师（角色为教师时非空）
     private Admin loginAdmin; //登录管理员（角色为管理员非空）
+    private AiChatWindow chatWindow;
 
 
     public MainFrame() {
@@ -322,7 +323,7 @@ public class MainFrame extends JFrame {
 
         try {
             // 2. 实例化并显示聊天窗口 (这是一个 JFrame，独立于主界面)
-            AiChatWindow chatWindow = new AiChatWindow(currentUserId);
+            chatWindow = new AiChatWindow(currentUserId);
             chatWindow.setVisible(true);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this,
@@ -422,7 +423,7 @@ public class MainFrame extends JFrame {
         int confirm = JOptionPane.showConfirmDialog(this, "确定要退出登录吗？", "确认退出", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             userContext.clearUser();
-
+            chatWindow.setVisible(false);
             dispose(); // 关闭主界面
             new LoginFrame().setVisible(true); // 打开登录界面
         }
