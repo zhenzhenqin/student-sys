@@ -422,6 +422,7 @@ public class MainFrame extends JFrame {
         int confirm = JOptionPane.showConfirmDialog(this, "确定要退出登录吗？", "确认退出", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             userContext.clearUser();
+
             dispose(); // 关闭主界面
             new LoginFrame().setVisible(true); // 打开登录界面
         }

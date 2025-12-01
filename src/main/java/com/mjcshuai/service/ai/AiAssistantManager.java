@@ -10,6 +10,8 @@ import java.time.Duration;
 
 /**
  * AI 助手管理器 (单例模式)
+ * ChatGPT
+ * 基于langchain4j框架，调用了OpenAI的gpt-4o-mini模型
  * 负责初始化连接 OpenAI 服务，并组装 Memory 和 Service
  */
 public class AiAssistantManager {
