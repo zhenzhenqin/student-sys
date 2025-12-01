@@ -40,7 +40,7 @@ public class AiChatWindow extends JFrame {
         initView();   // 2. 初始化界面
 
         // 初始欢迎语
-        appendMessage("System", "你好！我是你的专属 AI 顾问。有关系统的任何问题都可以问我，我会结合上下文为你解答。", systemStyle);
+        appendMessage("System", "你好！我是你的专属 AUT专属AI 顾问。有关系统的任何问题都可以问我，我会结合上下文为你解答。", systemStyle);
     }
 
     // 初始化样式配置
@@ -121,7 +121,8 @@ public class AiChatWindow extends JFrame {
         if (content.isEmpty()) return;
 
         // 1. UI 立即响应用户输入 (使用用户样式)
-        appendMessage("我", content, userStyle);
+        appendMessage(currentUserId, content, userStyle);
+        //appendMessage("我", content, userStyle);
         inputField.setText("");
 
         // 锁定界面
@@ -141,7 +142,7 @@ public class AiChatWindow extends JFrame {
                 try {
                     String reply = get();
                     // AI 回复 (使用 AI 样式)
-                    appendMessage("AI 顾问", reply, aiStyle);
+                    appendMessage("AUT 顾问", reply, aiStyle);
                 } catch (Exception e) {
                     String errorMsg = "连接异常: " + (e.getCause() != null ? e.getCause().getMessage() : e.getMessage());
                     // 错误信息 (使用系统样式)
