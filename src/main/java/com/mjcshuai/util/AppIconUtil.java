@@ -22,12 +22,12 @@ public class AppIconUtil {
      */
     public static Image loadAppIcon() {
         try {
-            URL iconUrl = App.class.getResource("Icon/icon.png");
+            URL iconUrl = AppIconUtil.class.getResource("/Icon/icon.png");
             if (iconUrl != null) {
                 appIcon = new ImageIcon(iconUrl).getImage();
             }
         } catch (Exception e) {
-            System.err.println("无法加载应用程序图标");
+            System.err.println("无法加载应用程序图标: " + e.getMessage());
         }
         return appIcon;
     }
