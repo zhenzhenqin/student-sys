@@ -49,6 +49,10 @@ public class PersonalInfoFrame extends JInternalFrame {
         initUI(); // 初始化界面
         loadUserInfo(); // 加载用户信息到表单
         setSize(600, 400);
+
+        // 添加窗口样式
+        setBackground(Color.WHITE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
     // 初始化登录用户（判断角色）
@@ -65,21 +69,50 @@ public class PersonalInfoFrame extends JInternalFrame {
 
     // 初始化界面（根据角色动态生成表单）
     private void initUI() {
-        JPanel mainPanel = new JPanel(new GridBagLayout());
+        // 创建带背景色的主面板
+        JPanel mainPanel = new JPanel(new GridBagLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+                GradientPaint gp = new GradientPaint(0, 0, new Color(248, 249, 250), 0, getHeight(), new Color(233, 236, 239));
+                g2d.setPaint(gp);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
+
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 20, 10, 20);
+        gbc.insets = new Insets(12, 20, 12, 20);
         gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        // 设置标题样式
+        Font labelFont = new Font("微软雅黑", Font.PLAIN, 12);
+        Font fieldFont = new Font("微软雅黑", Font.PLAIN, 12);
 
         // 公共字段：ID（不可编辑）、用户名、性别、密码
         idLabel = new JLabel("ID：");
+        idLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
+        idLabel.setForeground(new Color(51, 51, 51));
         idField = new JTextField(20);
-        idField.setEditable(false); // ID不可修改
+        idField.setEditable(false);
+        idField.setFont(fieldFont);
+        idField.setBackground(new Color(245, 245, 245));
+        styleTextField(idField);
 
         nameLabel = new JLabel("用户名：");
+        nameLabel.setFont(labelFont);
         nameField = new JTextField(20);
+        nameField.setFont(fieldFont);
+        styleTextField(nameField);
 
         sexLabel = new JLabel("性别：");
+        sexLabel.setFont(labelFont);
         sexField = new JTextField(20);
+        sexField.setFont(fieldFont);
+        styleTextField(sexField);
 
         // 添加公共字段到面板
         int row = 0;
@@ -101,14 +134,19 @@ public class PersonalInfoFrame extends JInternalFrame {
         gbc.gridx = 1;
         mainPanel.add(sexField, gbc);
 
-
         // 根据角色添加特有字段
         if (loginStudent != null) { // 学生角色
             pwdLabel = new JLabel("密码：");
+            pwdLabel.setFont(labelFont);
             pwdField = new JPasswordField(20);
+            pwdField.setFont(fieldFont);
+            styleTextField(pwdField);
 
             classIdLabel = new JLabel("班级ID：");
+            classIdLabel.setFont(labelFont);
             classIdField = new JTextField(20);
+            classIdField.setFont(fieldFont);
+            styleTextField(classIdField);
 
             gbc.gridx = 0;
             gbc.gridy = row++;
@@ -123,13 +161,22 @@ public class PersonalInfoFrame extends JInternalFrame {
             mainPanel.add(classIdField, gbc);
         } else if (loginTeacher != null) { // 教师角色
             pwdLabel = new JLabel("密码：");
+            pwdLabel.setFont(labelFont);
             pwdField = new JPasswordField(20);
+            pwdField.setFont(fieldFont);
+            styleTextField(pwdField);
 
             titleLabel = new JLabel("职称：");
+            titleLabel.setFont(labelFont);
             titleField = new JTextField(20);
+            titleField.setFont(fieldFont);
+            styleTextField(titleField);
 
             ageLabel = new JLabel("年龄：");
+            ageLabel.setFont(labelFont);
             ageField = new JTextField(20);
+            ageField.setFont(fieldFont);
+            styleTextField(ageField);
 
             gbc.gridx = 0;
             gbc.gridy = row++;
@@ -148,20 +195,33 @@ public class PersonalInfoFrame extends JInternalFrame {
             mainPanel.add(ageLabel, gbc);
             gbc.gridx = 1;
             mainPanel.add(ageField, gbc);
-        } else if(loginAdmin != null) { //管理猿角色yeah！！！ ----mjc
+        } else if(loginAdmin != null) { //管理猿角色
             nameField.setEditable(false);
             sexField.setEditable(false);
+
             AdminPwdLabel = new JLabel("密码：");
+            AdminPwdLabel.setFont(labelFont);
             AdminPwdField = new JTextField(20);
             AdminPwdField.setEditable(false);
+            AdminPwdField.setFont(fieldFont);
+            AdminPwdField.setBackground(new Color(245, 245, 245));
+            styleTextField(AdminPwdField);
 
             dateLabel = new JLabel("创建日期：");
+            dateLabel.setFont(labelFont);
             dateField = new JTextField(20);
             dateField.setEditable(false);
+            dateField.setFont(fieldFont);
+            dateField.setBackground(new Color(245, 245, 245));
+            styleTextField(dateField);
 
             remarkLabel = new JLabel("说明：");
+            remarkLabel.setFont(labelFont);
             remarkField = new JTextField(20);
             remarkField.setEditable(false);
+            remarkField.setFont(fieldFont);
+            remarkField.setBackground(new Color(245, 245, 245));
+            styleTextField(remarkField);
 
             gbc.gridx = 0;
             gbc.gridy = row++;
@@ -182,8 +242,27 @@ public class PersonalInfoFrame extends JInternalFrame {
             mainPanel.add(remarkField, gbc);
         }
 
-        // 保存按钮
+        // 保存按钮美化
         JButton saveBtn = new JButton("保存修改");
+        saveBtn.setFont(new Font("微软雅黑", Font.BOLD, 14));
+        saveBtn.setBackground(new Color(70, 130, 180));
+        saveBtn.setForeground(Color.WHITE);
+        saveBtn.setFocusPainted(false);
+        saveBtn.setBorderPainted(false);
+        saveBtn.setPreferredSize(new Dimension(120, 35));
+        saveBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        // 添加按钮悬停效果
+        saveBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                saveBtn.setBackground(new Color(100, 149, 237));
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                saveBtn.setBackground(new Color(70, 130, 180));
+            }
+        });
+
         saveBtn.addActionListener(new SaveListener());
         gbc.gridx = 0;
         gbc.gridy = row++;
@@ -192,32 +271,78 @@ public class PersonalInfoFrame extends JInternalFrame {
         mainPanel.add(saveBtn, gbc);
 
         add(new JScrollPane(mainPanel), BorderLayout.CENTER);
+
+        // 美化滚动面板
+        JScrollPane scrollPane = new JScrollPane(mainPanel);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        add(scrollPane, BorderLayout.CENTER);
     }
+
 
     // 加载用户信息到表单
     private void loadUserInfo() {
-        if (loginStudent != null) { // 学生信息
+        if (loginStudent != null) {
             idField.setText(loginStudent.getId().toString());
             nameField.setText(loginStudent.getName());
             sexField.setText(loginStudent.getSex());
             pwdField.setText(loginStudent.getPassword());
             classIdField.setText(loginStudent.getClassId().toString());
-        } else if (loginTeacher != null) { // 教师信息
+        } else if (loginTeacher != null) {
             idField.setText(loginTeacher.getId().toString());
             nameField.setText(loginTeacher.getName());
             sexField.setText(loginTeacher.getSex());
             pwdField.setText(loginTeacher.getPassword());
             titleField.setText(loginTeacher.getTitle());
             ageField.setText(loginTeacher.getAge().toString());
-        } else if(loginAdmin != null){ //管理猿信息
+        } else if(loginAdmin != null){
             idField.setText(loginAdmin.getId().toString());
             nameField.setText(loginAdmin.getName());
             sexField.setText("This is a very mysterious secret");
             AdminPwdField.setText("Back to the time when I loved you");
             dateField.setText("2025-11-21 10:00:00");
             remarkField.setText("https://github.com/zhenzhenqin");
+
+            // 为管理员字段添加特殊样式
+            styleAdminField(AdminPwdField);
+            styleAdminField(dateField);
+            styleAdminField(remarkField);
         }
     }
+
+    // 为管理员字段添加特殊样式
+    private void styleAdminField(JTextField field) {
+        field.setFont(new Font("微软雅黑", Font.ITALIC, 12));
+        field.setForeground(new Color(100, 100, 100));
+        field.setBackground(new Color(248, 248, 248));
+    }
+
+    // 添加文本框样式方法
+    private void styleTextField(JTextField textField) {
+        textField.setPreferredSize(new Dimension(200, 30));
+        textField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(206, 212, 218)),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+
+        // 添加焦点效果
+        textField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                textField.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(new Color(70, 130, 180), 2),
+                        BorderFactory.createEmptyBorder(5, 10, 5, 10)
+                ));
+            }
+
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                textField.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(new Color(206, 212, 218)),
+                        BorderFactory.createEmptyBorder(5, 10, 5, 10)
+                ));
+            }
+        });
+    }
+
 
     // 保存修改的监听器
     private class SaveListener implements ActionListener {

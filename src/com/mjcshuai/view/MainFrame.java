@@ -256,6 +256,24 @@ public class MainFrame extends JFrame {
         }
         menuBar.add(courseMenu);
 
+        // 5. 成绩管理菜单（仅教师可见）
+        /*if (userContext.hasPermission("grade_students")) {
+            JMenu gradeMenu = new JMenu("成绩管理");
+            JMenuItem gradeItem = new JMenuItem("给学生打分");
+            gradeItem.addActionListener(e -> openInternalFrame(new GradeManageFrame(), "成绩管理"));
+            gradeMenu.add(gradeItem);
+            menuBar.add(gradeMenu);
+        }*/
+
+        // 6. 系统管理菜单（仅管理员可见）
+        /*if (userContext.hasPermission("manage_system")) {
+            JMenu systemMenu = new JMenu("系统管理");
+            JMenuItem systemSetItem = new JMenuItem("系统参数设置");
+            systemSetItem.addActionListener(e -> openInternalFrame(new SystemSetFrame(), "系统设置"));
+            systemMenu.add(systemSetItem);
+            menuBar.add(systemMenu);
+        }*/
+
         setJMenuBar(menuBar);
     }
 
