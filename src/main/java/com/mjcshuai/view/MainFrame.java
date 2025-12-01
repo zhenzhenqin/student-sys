@@ -13,6 +13,8 @@ import java.awt.event.MouseEvent;
 import java.net.URI;
 import java.net.URL;
 
+import com.mjcshuai.view.AiChatWindow;
+
 /**
  * 系统主界面 - 根据角色权限动态显示菜单
  */
@@ -274,7 +276,60 @@ public class MainFrame extends JFrame {
             menuBar.add(systemMenu);
         }*/
 
+        JMenu aiMenu = new JMenu("智能助手");
+        aiMenu.setFont(menuFont);
+        aiMenu.setForeground(new Color(135, 206, 250)); // 淡蓝色高亮
+        aiMenu.setOpaque(true);
+        aiMenu.setBackground(new Color(51, 51, 51));
+        addHoverEffect(aiMenu);
+
+        JMenuItem consultAiItem = new JMenuItem("咨询 AI 顾问");
+        consultAiItem.setFont(menuFont);
+        // 绑定事件
+        consultAiItem.addActionListener(e -> openAiChat());
+
+        aiMenu.add(consultAiItem);
+        menuBar.add(aiMenu);
+
         setJMenuBar(menuBar);
+    }
+
+    // 辅助方法：给菜单添加统一的悬停效果
+    private void addHoverEffect(JMenu menu) {
+        menu.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                menu.setBackground(new Color(70, 70, 70));
+            }
+            public void mouseExited(MouseEvent e) {
+                menu.setBackground(new Color(51, 51, 51));
+            }
+        });
+    }
+
+    /**
+     * 打开 AI 聊天窗口
+     */
+    private void openAiChat() {
+        // 1. 获取当前用户身份，作为 AI 聊天的 MemoryID
+        String currentUserId = "Unknown";
+        if (loginStudent != null) {
+            currentUserId = "学生-" + loginStudent.getName();
+        } else if (loginTeacher != null) {
+            currentUserId = "教师-" + loginTeacher.getName();
+        } else if (loginAdmin != null) {
+            currentUserId = "管理员-" + loginAdmin.getName();
+        }
+
+        try {
+            // 2. 实例化并显示聊天窗口 (这是一个 JFrame，独立于主界面)
+            AiChatWindow chatWindow = new AiChatWindow(currentUserId);
+            chatWindow.setVisible(true);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this,
+                    "启动 AI 助手失败: " + ex.getMessage(),
+                    "错误", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
     }
 
 
