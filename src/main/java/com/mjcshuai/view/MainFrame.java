@@ -371,7 +371,6 @@ public class MainFrame extends JFrame {
     }
 
     // 打开内部窗口（避免重复打开同一个窗口）
-    // 打开内部窗口（避免重复打开同一个窗口）
     private void openInternalFrame(JInternalFrame frame, String title) {
         // 检查窗口是否已打开，若已打开则激活
         for (JInternalFrame internalFrame : desktopPane.getAllFrames()) {
@@ -423,7 +422,12 @@ public class MainFrame extends JFrame {
         int confirm = JOptionPane.showConfirmDialog(this, "确定要退出登录吗？", "确认退出", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             userContext.clearUser();
-            chatWindow.setVisible(false);
+            //chatWindow.setVisible(false);
+
+            //如果ai聊天窗口不为空 则关闭窗口然后退出登录
+            if(chatWindow != null){
+                chatWindow.setVisible(false);
+            }
             dispose(); // 关闭主界面
             new LoginFrame().setVisible(true); // 打开登录界面
         }
