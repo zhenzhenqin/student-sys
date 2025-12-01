@@ -104,6 +104,28 @@ public class LoginFrame extends JFrame {
 
         add(mainPanel);
 
+        // 设置窗口背景色
+        getContentPane().setBackground(new Color(245, 245, 245));
+
+        // 美化主要面板
+        mainPanel.setBackground(new Color(255, 255, 255));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
+
+        // 美化角色选择面板
+        rolePanel.setBackground(new Color(250, 250, 250));
+        rolePanel.setBorder(BorderFactory.createTitledBorder("登录角色"));
+
+        // 美化输入框
+        usernameField.setPreferredSize(new Dimension(200, 30));
+        passwordField.setPreferredSize(new Dimension(200, 30));
+
+        // 美化按钮
+        loginButton.setBackground(new Color(70, 130, 180));
+        loginButton.setForeground(Color.WHITE);
+        loginButton.setFocusPainted(false);
+        loginButton.setBorderPainted(false);
+        loginButton.setPreferredSize(new Dimension(100, 35));
+
         /**
          * 以下逻辑为键盘按键监听事件绑定
          * author: mjc

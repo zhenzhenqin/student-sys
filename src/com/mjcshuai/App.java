@@ -1,4 +1,3 @@
-// App.java 修改后的版本
 package com.mjcshuai;
 
 import com.mjcshuai.util.AppIconUtil;

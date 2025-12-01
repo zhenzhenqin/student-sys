@@ -1,7 +1,7 @@
 package com.mjcshuai.model;
 
 /**
- * 权限枚举类
+ * 权限枚举类 rbac 权限管理
  * author:mjc
  * date:2025-11-21
  */
