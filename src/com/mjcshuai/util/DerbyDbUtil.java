@@ -29,7 +29,7 @@ public class DerbyDbUtil {
             initDatabase();
             //System.out.println("Derby 驱动加载成功！");
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Derby 驱动加载失败！请检查依赖是否正确", e);
+            throw new RuntimeException("Derby driver failed to load! Please check if the dependencies are correct.", e);
         }
     }
 
@@ -63,12 +63,12 @@ public class DerbyDbUtil {
                 return;
             }
 
-            System.out.println("检测到空数据库，开始执行初始化脚本...");
+            System.out.println("Empty database detected, starting to execute initialization script...");
             executeSqlScript(conn, DbProperties.SQL_FILE_PATH);
-            System.out.println("数据库初始化完成！");
+            System.out.println("Database initialization completed successfully!");
 
         } catch (SQLException e) {
-            System.err.println("数据库初始化检查失败：" + e.getMessage());
+            System.err.println("Database initialization check failed: " + e.getMessage());
         } finally {
             closeAll(rs, null, conn);
         }
@@ -82,7 +82,7 @@ public class DerbyDbUtil {
     private static void executeSqlScript(Connection conn, String filePath) {
         File sqlFile = new File(filePath);
         if (!sqlFile.exists()) {
-            System.err.println("警告：找不到初始化SQL文件: " + sqlFile.getAbsolutePath());
+            System.err.println("Warning: Initialization SQL file not found: " + sqlFile.getAbsolutePath());
             return;
         }
 
@@ -128,7 +128,7 @@ public class DerbyDbUtil {
             conn.commit(); // 提交事务
 
         } catch (Exception e) {
-            System.err.println("SQL脚本执行出错：" + e.getMessage());
+            System.err.println("Error executing SQL script: " + e.getMessage());
             e.printStackTrace();
             try {
                 conn.rollback(); // 出错回滚
@@ -172,7 +172,7 @@ public class DerbyDbUtil {
             if ("XJ015".equals(e.getSQLState())) {
                 //System.out.println("Derby 数据库正常关闭！");
             } else {
-                System.err.println("Derby 关闭异常：" + e.getMessage());
+                System.err.println("Error shutting down Derby database: " + e.getMessage());
                 e.printStackTrace();
             }
         }

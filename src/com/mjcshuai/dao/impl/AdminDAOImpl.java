@@ -55,7 +55,7 @@ public class AdminDAOImpl implements AdminDAO {
                 //admin.setCreateDate(rs.getString("createDate"));
             }
         } catch (SQLException e) {
-            System.err.println("管理员登录查询异常: " + e.getMessage());
+            System.err.println("Administrator login query exception: " + e.getMessage());
             e.printStackTrace();
         } finally {
             // 调用静态方法关闭所有资源

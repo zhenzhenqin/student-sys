@@ -35,7 +35,7 @@ public class MainFrame extends JFrame {
 
     // 初始化窗口基本属性
     private void initFrame() {
-        setTitle("学生管理系统 - " + userContext.getRoleName() + "端");
+        setTitle("Student Management System - " + userContext.getRoleName() + " End");
         setSize(1200, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -72,11 +72,11 @@ public class MainFrame extends JFrame {
         // 判断当前登录的用户信息
         String userInfoText = "";
         if (loginAdmin != null){
-            userInfoText = "欢迎尊贵的管理猿: " + loginAdmin.getName();
+            userInfoText = "Welcome, distinguished administrator: " + loginAdmin.getName();
         } else if (loginStudent != null){
-            userInfoText = "亲爱的同学: " + loginStudent.getName();
+            userInfoText = "Welcome, student: " + loginStudent.getName();
         } else if (loginTeacher != null){
-            userInfoText = "亲爱的教师: " + loginTeacher.getName();
+            userInfoText = "Welcome, teacher: " + loginTeacher.getName();
         }
 
         userInfoLabel = new JLabel(userInfoText);
@@ -87,7 +87,7 @@ public class MainFrame extends JFrame {
         userInfoLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         userInfoLabel.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
-                openInternalFrame(new PersonalInfoFrame(), "个人信息管理");
+                openInternalFrame(new PersonalInfoFrame(), "Personal Information Management");
             }
 
             public void mouseEntered(MouseEvent evt) {
@@ -136,7 +136,7 @@ public class MainFrame extends JFrame {
         Font menuFont = new Font("微软雅黑", Font.PLAIN, 12);
 
         // 1. 个人中心菜单（所有角色都有）
-        JMenu personalMenu = new JMenu("个人中心");
+        JMenu personalMenu = new JMenu("Personal Center");
         personalMenu.setFont(menuFont);
         personalMenu.setForeground(Color.WHITE); // 白色字体
         personalMenu.setOpaque(true);
@@ -153,12 +153,12 @@ public class MainFrame extends JFrame {
             }
         });
 
-        JMenuItem ownInfoItem = new JMenuItem("查看/编辑个人信息");
+        JMenuItem ownInfoItem = new JMenuItem("View/Edit Personal Information");
         ownInfoItem.setFont(menuFont);
-        JMenuItem logoutItem = new JMenuItem("退出登录");
+        JMenuItem logoutItem = new JMenuItem("Log out");
         logoutItem.setFont(menuFont);
 
-        ownInfoItem.addActionListener(e -> openInternalFrame(new PersonalInfoFrame(), "个人信息管理"));
+        ownInfoItem.addActionListener(e -> openInternalFrame(new PersonalInfoFrame(), "Personal Information Management"));
         logoutItem.addActionListener(e -> logout());
 
         personalMenu.add(ownInfoItem);
@@ -168,7 +168,7 @@ public class MainFrame extends JFrame {
 
         // 2. 学生管理菜单（仅管理员可见）
         if (userContext.hasPermission("view_all_students")) {
-            JMenu studentMenu = new JMenu("学生管理");
+            JMenu studentMenu = new JMenu("Student Management");
             studentMenu.setFont(menuFont);
             studentMenu.setForeground(Color.WHITE);
             studentMenu.setOpaque(true);
@@ -185,16 +185,16 @@ public class MainFrame extends JFrame {
                 }
             });
 
-            JMenuItem viewStudentItem = new JMenuItem("查看所有学生");
+            JMenuItem viewStudentItem = new JMenuItem("View All Students");
             viewStudentItem.setFont(menuFont);
-            viewStudentItem.addActionListener(e -> openInternalFrame(new StudentManageFrame(), "学生管理"));
+            viewStudentItem.addActionListener(e -> openInternalFrame(new StudentManageFrame(), "Student Management"));
             studentMenu.add(viewStudentItem);
             menuBar.add(studentMenu);
         }
 
         // 3. 教师管理菜单（仅管理员可见）
         if (userContext.hasPermission("view_all_teachers")) {
-            JMenu teacherMenu = new JMenu("教师管理");
+            JMenu teacherMenu = new JMenu("Teacher Management");
             teacherMenu.setFont(menuFont);
             teacherMenu.setForeground(Color.WHITE);
             teacherMenu.setOpaque(true);
@@ -211,15 +211,15 @@ public class MainFrame extends JFrame {
                 }
             });
 
-            JMenuItem viewTeacherItem = new JMenuItem("查看所有教师");
+            JMenuItem viewTeacherItem = new JMenuItem("View All Teachers");
             viewTeacherItem.setFont(menuFont);
-            viewTeacherItem.addActionListener(e -> openInternalFrame(new TeacherManageFrame(), "教师管理"));
+            viewTeacherItem.addActionListener(e -> openInternalFrame(new TeacherManageFrame(), "Teacher Management"));
             teacherMenu.add(viewTeacherItem);
             menuBar.add(teacherMenu);
         }
 
         // 4. 课程管理菜单（不同角色显示不同菜单项）
-        JMenu courseMenu = new JMenu("课程管理");
+        JMenu courseMenu = new JMenu("Course Management");
         courseMenu.setFont(menuFont);
         courseMenu.setForeground(Color.WHITE);
         courseMenu.setOpaque(true);
@@ -237,21 +237,21 @@ public class MainFrame extends JFrame {
         });
 
         if (userContext.hasPermission("view_all_courses")) { // 管理员/学生
-            JMenuItem viewAllCourseItem = new JMenuItem("查看所有课程");
+            JMenuItem viewAllCourseItem = new JMenuItem("View All Courses");
             viewAllCourseItem.setFont(menuFont);
-            viewAllCourseItem.addActionListener(e -> openInternalFrame(new CourseManageFrame(), "课程列表"));
+            viewAllCourseItem.addActionListener(e -> openInternalFrame(new CourseManageFrame(), "Course Management"));
             courseMenu.add(viewAllCourseItem);
         }
         if (userContext.hasPermission("view_teaching_courses")) { // 教师
-            JMenuItem teachingCourseItem = new JMenuItem("查看我的授课");
+            JMenuItem teachingCourseItem = new JMenuItem("View My Courses");
             teachingCourseItem.setFont(menuFont);
-            teachingCourseItem.addActionListener(e -> openInternalFrame(new TeacherCourseFrame(), "我的授课"));
+            teachingCourseItem.addActionListener(e -> openInternalFrame(new TeacherCourseFrame(), "Course Management"));
             courseMenu.add(teachingCourseItem);
         }
         if (userContext.hasPermission("view_selected_courses")) { // 学生
-            JMenuItem selectedCourseItem = new JMenuItem("查看已选课程");
+            JMenuItem selectedCourseItem = new JMenuItem("View Selected Courses");
             selectedCourseItem.setFont(menuFont);
-            selectedCourseItem.addActionListener(e -> openInternalFrame(new StudentSelectedCourseFrame(), "已选课程"));
+            selectedCourseItem.addActionListener(e -> openInternalFrame(new StudentSelectedCourseFrame(), "Course Management"));
             courseMenu.add(selectedCourseItem);
         }
         menuBar.add(courseMenu);
@@ -296,7 +296,7 @@ public class MainFrame extends JFrame {
                 g2d.setColor(new Color(200, 200, 200, 50));
                 g2d.setFont(new Font("微软雅黑", Font.BOLD, 48));
                 FontMetrics fm = g2d.getFontMetrics();
-                String watermark = "学生管理系统";
+                String watermark = "Course Management System";
                 int x = (getWidth() - fm.stringWidth(watermark)) / 2;
                 int y = getHeight() / 3;
                 g2d.drawString(watermark, x, y);
@@ -364,7 +364,7 @@ public class MainFrame extends JFrame {
 
     // 退出登录（清除上下文，返回登录界面）
     private void logout() {
-        int confirm = JOptionPane.showConfirmDialog(this, "确定要退出登录吗？", "确认退出", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to log out?", "Confirm exit", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             userContext.clearUser();
             dispose(); // 关闭主界面
@@ -385,7 +385,7 @@ public class MainFrame extends JFrame {
             // 创建图标标签
             JLabel githubLabel = new JLabel(scaledIcon);
             githubLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            githubLabel.setToolTipText("访问 GitHub 仓库");
+            githubLabel.setToolTipText("Visit the GitHub repository");
 
             // 创建URL标签
             JLabel urlLabel = new JLabel("github.com/zhenzhenqin");
@@ -414,7 +414,7 @@ public class MainFrame extends JFrame {
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(MainFrame.this,
                                 "无法打开浏览器，请手动访问:\nhttps://github.com/zhenzhenqin/student-sys",
-                                "提示", JOptionPane.INFORMATION_MESSAGE);
+                                "Prompt", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
             };
@@ -444,7 +444,7 @@ public class MainFrame extends JFrame {
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(MainFrame.this,
                                 "无法打开浏览器，请手动访问:\nhttps://github.com/zhenzhenqin/student-sys",
-                                "提示", JOptionPane.INFORMATION_MESSAGE);
+                                "Prompt", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
             });
@@ -529,7 +529,7 @@ public class MainFrame extends JFrame {
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(MainFrame.this,
                                 "无法打开浏览器，请手动访问:\nhttps://github.com/zhenzhenqin/student-sys",
-                                "提示", JOptionPane.INFORMATION_MESSAGE);
+                                "Prompt", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
 

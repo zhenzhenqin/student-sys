@@ -43,7 +43,7 @@ public class PersonalInfoFrame extends JInternalFrame {
     private TeacherDAO teacherDAO = new TeacherDAOImpl();
 
     public PersonalInfoFrame() {
-        super("个人信息管理", true, true, true, true);
+        super("Personal Information Management", true, true, true, true);
         userContext = UserContext.getInstance();
         initUser(); // 初始化登录用户信息
         initUI(); // 初始化界面
@@ -102,13 +102,13 @@ public class PersonalInfoFrame extends JInternalFrame {
         idField.setBackground(new Color(245, 245, 245));
         styleTextField(idField);
 
-        nameLabel = new JLabel("用户名：");
+        nameLabel = new JLabel("Username：");
         nameLabel.setFont(labelFont);
         nameField = new JTextField(20);
         nameField.setFont(fieldFont);
         styleTextField(nameField);
 
-        sexLabel = new JLabel("性别：");
+        sexLabel = new JLabel("Sex：");
         sexLabel.setFont(labelFont);
         sexField = new JTextField(20);
         sexField.setFont(fieldFont);
@@ -136,13 +136,13 @@ public class PersonalInfoFrame extends JInternalFrame {
 
         // 根据角色添加特有字段
         if (loginStudent != null) { // 学生角色
-            pwdLabel = new JLabel("密码：");
+            pwdLabel = new JLabel("Password：");
             pwdLabel.setFont(labelFont);
             pwdField = new JPasswordField(20);
             pwdField.setFont(fieldFont);
             styleTextField(pwdField);
 
-            classIdLabel = new JLabel("班级ID：");
+            classIdLabel = new JLabel("Class ID：");
             classIdLabel.setFont(labelFont);
             classIdField = new JTextField(20);
             classIdField.setFont(fieldFont);
@@ -160,19 +160,19 @@ public class PersonalInfoFrame extends JInternalFrame {
             gbc.gridx = 1;
             mainPanel.add(classIdField, gbc);
         } else if (loginTeacher != null) { // 教师角色
-            pwdLabel = new JLabel("密码：");
+            pwdLabel = new JLabel("Password：");
             pwdLabel.setFont(labelFont);
             pwdField = new JPasswordField(20);
             pwdField.setFont(fieldFont);
             styleTextField(pwdField);
 
-            titleLabel = new JLabel("职称：");
+            titleLabel = new JLabel("Title：");
             titleLabel.setFont(labelFont);
             titleField = new JTextField(20);
             titleField.setFont(fieldFont);
             styleTextField(titleField);
 
-            ageLabel = new JLabel("年龄：");
+            ageLabel = new JLabel("Age：");
             ageLabel.setFont(labelFont);
             ageField = new JTextField(20);
             ageField.setFont(fieldFont);
@@ -199,7 +199,7 @@ public class PersonalInfoFrame extends JInternalFrame {
             nameField.setEditable(false);
             sexField.setEditable(false);
 
-            AdminPwdLabel = new JLabel("密码：");
+            AdminPwdLabel = new JLabel("Password：");
             AdminPwdLabel.setFont(labelFont);
             AdminPwdField = new JTextField(20);
             AdminPwdField.setEditable(false);
@@ -207,7 +207,7 @@ public class PersonalInfoFrame extends JInternalFrame {
             AdminPwdField.setBackground(new Color(245, 245, 245));
             styleTextField(AdminPwdField);
 
-            dateLabel = new JLabel("创建日期：");
+            dateLabel = new JLabel("Create Date：");
             dateLabel.setFont(labelFont);
             dateField = new JTextField(20);
             dateField.setEditable(false);
@@ -215,7 +215,7 @@ public class PersonalInfoFrame extends JInternalFrame {
             dateField.setBackground(new Color(245, 245, 245));
             styleTextField(dateField);
 
-            remarkLabel = new JLabel("说明：");
+            remarkLabel = new JLabel("Remark：");
             remarkLabel.setFont(labelFont);
             remarkField = new JTextField(20);
             remarkField.setEditable(false);
@@ -243,7 +243,7 @@ public class PersonalInfoFrame extends JInternalFrame {
         }
 
         // 保存按钮美化
-        JButton saveBtn = new JButton("保存修改");
+        JButton saveBtn = new JButton("Save Changes");
         saveBtn.setFont(new Font("微软雅黑", Font.BOLD, 14));
         saveBtn.setBackground(new Color(70, 130, 180));
         saveBtn.setForeground(Color.WHITE);
@@ -371,12 +371,12 @@ public class PersonalInfoFrame extends JInternalFrame {
 
             if (name.isEmpty() || password.isEmpty() || classIdStr.isEmpty()) {
                 JOptionPane.showMessageDialog(PersonalInfoFrame.this,
-                        "用户名、密码和班级ID不能为空！", "错误", JOptionPane.ERROR_MESSAGE);
+                        "Username, password, and class ID cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             if (!classIdStr.matches("\\d+")) {
                 JOptionPane.showMessageDialog(PersonalInfoFrame.this,
-                        "班级ID必须是数字！", "错误", JOptionPane.ERROR_MESSAGE);
+                        "Class ID must be a number!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -394,7 +394,7 @@ public class PersonalInfoFrame extends JInternalFrame {
                 // 更新上下文信息（保持内存与数据库一致）
                 userContext.initUser(updatedStudent);
                 JOptionPane.showMessageDialog(PersonalInfoFrame.this,
-                        "个人信息更新成功！", "成功", JOptionPane.INFORMATION_MESSAGE);
+                        "Personal information updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
 
                 //更新修改之后的数据 直接将修改后的参数赋给登录的参数
                 loginStudent = updatedStudent;
@@ -402,7 +402,7 @@ public class PersonalInfoFrame extends JInternalFrame {
                 loadUserInfo(); // 刷新表单显示
             } else {
                 JOptionPane.showMessageDialog(PersonalInfoFrame.this,
-                        "更新失败，请重试！", "失败", JOptionPane.ERROR_MESSAGE);
+                        "Update failed, please try again!", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
 
@@ -417,12 +417,12 @@ public class PersonalInfoFrame extends JInternalFrame {
 
             if (name.isEmpty() || password.isEmpty() || title.isEmpty() || ageStr.isEmpty()) {
                 JOptionPane.showMessageDialog(PersonalInfoFrame.this,
-                        "带*的字段不能为空！", "错误", JOptionPane.ERROR_MESSAGE);
+                        "Fields with * cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             if (!ageStr.matches("\\d+") || Integer.parseInt(ageStr) < 18 || Integer.parseInt(ageStr) > 65) {
                 JOptionPane.showMessageDialog(PersonalInfoFrame.this,
-                        "年龄必须是18-65之间的数字！", "错误", JOptionPane.ERROR_MESSAGE);
+                        "Age must be a number between 18 and 65!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -441,14 +441,14 @@ public class PersonalInfoFrame extends JInternalFrame {
                 // 更新上下文信息
                 userContext.initUser(updatedTeacher);
                 JOptionPane.showMessageDialog(PersonalInfoFrame.this,
-                        "个人信息更新成功！", "成功", JOptionPane.INFORMATION_MESSAGE);
+                        "Personal information updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
 
                 loginTeacher = updatedTeacher;
 
                 loadUserInfo(); // 刷新表单显示
             } else {
                 JOptionPane.showMessageDialog(PersonalInfoFrame.this,
-                        "更新失败，请重试！", "失败", JOptionPane.ERROR_MESSAGE);
+                        "Update failed, please try again!", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }

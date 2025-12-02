@@ -53,7 +53,7 @@ public class StudentDAOImpl implements StudentDAO {
                 student.setPassword(rs.getString("password"));
             }
         } catch (SQLException e) {
-            System.err.println("学生登录查询异常: " + e.getMessage());
+            System.err.println("Student login query error: " + e.getMessage());
             e.printStackTrace();
         } finally {
             //DbUtil.closeAll(conn, pstmt, rs);
@@ -91,7 +91,7 @@ public class StudentDAOImpl implements StudentDAO {
                 studentList.add(student);
             }
         } catch (SQLException e) {
-            System.err.println("查询所有学生异常: " + e.getMessage());
+            System.err.println("Query all student exceptions: " + e.getMessage());
             e.printStackTrace();
         } finally {
             //DbUtil.closeAll(conn, pstmt, rs);
@@ -121,7 +121,7 @@ public class StudentDAOImpl implements StudentDAO {
             pstmt.setString(4, student.getPassword());
             return pstmt.executeUpdate() > 0; // 执行成功返回true
         } catch (SQLException e) {
-            System.err.println("新增学生异常: " + e.getMessage());
+            System.err.println("Add student exception: " + e.getMessage());
             e.printStackTrace();
             return false;
         } finally {
@@ -152,7 +152,7 @@ public class StudentDAOImpl implements StudentDAO {
             pstmt.setInt(5, student.getId());
             return pstmt.executeUpdate() > 0; // 执行成功返回true
         } catch (SQLException e) {
-            System.err.println("更新学生异常: " + e.getMessage());
+            System.err.println("Update student exception: " + e.getMessage());
             e.printStackTrace();
             return false;
         } finally {
@@ -179,7 +179,7 @@ public class StudentDAOImpl implements StudentDAO {
             pstmt.setInt(1, id);
             return pstmt.executeUpdate() > 0; // 执行成功返回true
         } catch (SQLException e) {
-            System.err.println("删除学生异常: " + e.getMessage());
+            System.err.println("Delete student exception: " + e.getMessage());
             e.printStackTrace();
             return false;
         } finally {
