@@ -12,7 +12,6 @@ import java.time.Duration;
 
 /**
  * AI 助手管理器 (单例模式)
- * @author:ChatGPT
  * 基于langchain4j框架，调用了OpenAI的gpt-4o-mini模型
  * 负责初始化连接 OpenAI 服务，并组装 Memory 和 Service
  */
@@ -38,7 +37,7 @@ public class AiAssistantManager {
 
     // 具体的初始化逻辑
     private static ConsultantService createService() {
-        log.info("正在初始化 AI 服务...");
+        log.info("Initializing AI service...");
         
         // 1. 配置大模型连接信息
         // ----------------------------------------------------------

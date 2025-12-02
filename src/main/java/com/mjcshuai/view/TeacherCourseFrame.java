@@ -20,13 +20,13 @@ public class TeacherCourseFrame extends JInternalFrame {
 
     // 表格列名（展示授课核心信息，适配教师需求）
     private String[] columnNames = {
-            "授课ID", "课程ID", "课程名称", "学分", "课时",
-            "授课学期", "授课年份", "选课人数"
+            "Teacher ID", "Course ID", "Course Name", "Credit", "Hours",
+            "Semester", "Year", "Enrollment Count"
     };
 
     public TeacherCourseFrame() {
         // 窗口基础配置（与其他内部窗口风格一致）
-        super("我的授课列表", true, true, true, true);
+        super("My Course List", true, true, true, true);
         setSize(900, 600);
 
         // 初始化界面组件
@@ -63,8 +63,8 @@ public class TeacherCourseFrame extends JInternalFrame {
         teachCourseTable.getColumnModel().getColumn(7).setPreferredWidth(80);  // 选课人数
 
         // 功能按钮（刷新+查看选课学生）
-        refreshBtn = new JButton("刷新列表");
-        viewStudentsBtn = new JButton("查看选课学生");
+        refreshBtn = new JButton("Refresh List");
+        viewStudentsBtn = new JButton("View Selected Students");
         // 按钮样式统一
         JButton[] buttons = {refreshBtn, viewStudentsBtn};
         for (JButton btn : buttons) {
@@ -75,7 +75,7 @@ public class TeacherCourseFrame extends JInternalFrame {
         // 按钮点击事件
         refreshBtn.addActionListener(e -> {
             loadTeacherCourseData();
-            JOptionPane.showMessageDialog(this, "刷新成功！", "提示", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Refresh Success！", "Success", JOptionPane.INFORMATION_MESSAGE);
         });
         viewStudentsBtn.addActionListener(e -> viewSelectedStudents());
 
@@ -101,7 +101,7 @@ public class TeacherCourseFrame extends JInternalFrame {
 
         // 2. 校验登录用户是否为教师（避免非教师角色访问）
         if (loginUser == null || !(loginUser instanceof Teacher)) {
-            JOptionPane.showMessageDialog(this, "未检测到登录教师信息，请重新登录！", "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No Login Teacher Info Detected！\nPlease Log In Again！", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -140,11 +140,11 @@ public class TeacherCourseFrame extends JInternalFrame {
 
             // 无授课记录时提示
             if (!hasData) {
-                JOptionPane.showMessageDialog(this, "暂无授课记录！", "提示", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "No Course Record Found！\nPlease Check Your Teaching Schedule！", "Info", JOptionPane.INFORMATION_MESSAGE);
             }
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "加载授课数据失败！\n" + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Load Course Data Failed！\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         } finally {
             DerbyDbUtil.closeAll(rs, pstmt, conn);
@@ -156,7 +156,7 @@ public class TeacherCourseFrame extends JInternalFrame {
         // 校验是否选中行
         int selectedRow = teachCourseTable.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "请选中要查看的授课课程！", "提示", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please Select a Course to View Selected Students！", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -176,13 +176,13 @@ public class TeacherCourseFrame extends JInternalFrame {
 
         // 学生表格列名
         private String[] studentColumnNames = {
-                "学生ID", "学生姓名", "班级ID", "性别", "选课时间", "成绩"
+                "Student ID", "Student Name", "Class ID", "Gender", "Enrollment Time", "Grade"
         };
 
         public SelectedStudentDialog(int teachId, String courseName) {
             // 弹窗配置（父窗口为顶层Frame，避免构造方法错误）
             super((Frame) TeacherCourseFrame.this.getTopLevelAncestor(),
-                    courseName + " - 选课学生列表",
+                    courseName + " - Selected Student List",
                     true); // 模态窗口
             this.teachId = teachId;
             setSize(800, 500);
@@ -245,11 +245,11 @@ public class TeacherCourseFrame extends JInternalFrame {
 
                 // 无学生选课时提示
                 if (!hasStudent) {
-                    JOptionPane.showMessageDialog(this, "暂无学生选择该课程！", "提示", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "No Student Enrolled in This Course！\nPlease Check the Enrollment Record！", "Info", JOptionPane.INFORMATION_MESSAGE);
                 }
 
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "加载学生数据失败！\n" + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Load Student Data Failed！\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             } finally {
                 DerbyDbUtil.closeAll(rs, pstmt, conn);

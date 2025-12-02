@@ -11,7 +11,6 @@ import java.awt.event.KeyEvent;
 
 /**
  * AI 智能助手聊天窗口\
- * author:Gemini
  * date:2025-12-1
  */
 public class AiChatWindow extends JFrame {
@@ -31,6 +30,7 @@ public class AiChatWindow extends JFrame {
         this.currentUserId = userId;
 
         setTitle("智能系统顾问 - 正在为 [" + userId + "] 服务");
+        setTitle("Intelligent Systems Advisor - Serving [" + userId + "]");
         setSize(550, 650);
         setLocationRelativeTo(null); // 居中显示
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -40,7 +40,7 @@ public class AiChatWindow extends JFrame {
         initView();   // 2. 初始化界面
 
         // 初始欢迎语
-        appendMessage("System", "你好！我是你的专属 AUT专属AI 顾问。有关系统的任何问题都可以问我，我会结合上下文为你解答。", systemStyle);
+        appendMessage("System", "Hello! I am your exclusive AI Consultant for the System. Feel free to ask any questions about the system, and I will provide answers based on the context.", systemStyle);
     }
 
     // 初始化样式配置
@@ -78,7 +78,7 @@ public class AiChatWindow extends JFrame {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         add(scrollPane, BorderLayout.CENTER);
 
-        // --- 底部：输入区域 (保持不变) ---
+        // --- 底部：输入区域  ---
         JPanel bottomPanel = new JPanel(new BorderLayout(8, 8));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         bottomPanel.setBackground(new Color(240, 242, 245));
@@ -99,7 +99,7 @@ public class AiChatWindow extends JFrame {
             }
         });
 
-        sendButton = new JButton("发送");
+        sendButton = new JButton("Send");
         sendButton.setFont(new Font("微软雅黑", Font.BOLD, 14));
         sendButton.setBackground(new Color(0, 123, 255));
         sendButton.setForeground(Color.WHITE);
@@ -142,9 +142,9 @@ public class AiChatWindow extends JFrame {
                 try {
                     String reply = get();
                     // AI 回复 (使用 AI 样式)
-                    appendMessage("AUT 顾问", reply, aiStyle);
+                    appendMessage("AI Consultant", reply, aiStyle);
                 } catch (Exception e) {
-                    String errorMsg = "连接异常: " + (e.getCause() != null ? e.getCause().getMessage() : e.getMessage());
+                    String errorMsg = "Connection Error: " + (e.getCause() != null ? e.getCause().getMessage() : e.getMessage());
                     // 错误信息 (使用系统样式)
                     appendMessage("System Error", errorMsg, systemStyle);
                     e.printStackTrace();
@@ -160,7 +160,7 @@ public class AiChatWindow extends JFrame {
     private void setSendingState(boolean isSending) {
         inputField.setEnabled(!isSending);
         sendButton.setEnabled(!isSending);
-        sendButton.setText(isSending ? "思考中..." : "发送");
+        sendButton.setText(isSending ? "Thinking..." : "Send");
         sendButton.setBackground(isSending ? new Color(150, 150, 150) : new Color(0, 123, 255));
     }
 

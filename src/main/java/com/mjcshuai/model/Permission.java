@@ -1,5 +1,9 @@
 package com.mjcshuai.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * 权限枚举类 rbac 权限管理
  * author:mjc

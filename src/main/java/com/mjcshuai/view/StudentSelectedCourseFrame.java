@@ -21,13 +21,13 @@ public class StudentSelectedCourseFrame extends JInternalFrame {
 
     // 表格列名（学生关心的核心信息）
     private String[] columnNames = {
-            "课程ID", "课程名称", "学分", "课时", "授课教师",
-            "授课学期", "选课时间", "成绩"
+            "Course ID", "Course Name", "Credit", "Hours", "Teacher",
+            "Semester", "Enrollment Time", "Grade"
     };
 
     public StudentSelectedCourseFrame() {
         // 窗口基础配置（与其他内部窗口统一风格）
-        super("已选课程列表", true, true, true, true);
+        super("Selected Course List", true, true, true, true);
         setSize(900, 600);
 
         // 初始化界面组件
@@ -64,8 +64,8 @@ public class StudentSelectedCourseFrame extends JInternalFrame {
         selectedCourseTable.getColumnModel().getColumn(7).setPreferredWidth(60);  // 成绩
 
         // 功能按钮（刷新+退课）
-        refreshBtn = new JButton("刷新列表");
-        dropCourseBtn = new JButton("退课");
+        refreshBtn = new JButton("Refresh List");
+        dropCourseBtn = new JButton("Drop Course");
         // 按钮样式统一
         JButton[] buttons = {refreshBtn, dropCourseBtn};
         for (JButton btn : buttons) {
@@ -76,7 +76,7 @@ public class StudentSelectedCourseFrame extends JInternalFrame {
         // 按钮点击事件绑定
         refreshBtn.addActionListener(e -> {
             loadSelectedCourseData();
-            JOptionPane.showMessageDialog(this, "刷新成功！", "提示", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Refresh Success！", "Success", JOptionPane.INFORMATION_MESSAGE);
         });
         dropCourseBtn.addActionListener(e -> dropSelectedCourse());
 
@@ -102,7 +102,7 @@ public class StudentSelectedCourseFrame extends JInternalFrame {
 
         // 2. 角色校验：仅学生能访问，避免越权
         if (loginUser == null || !(loginUser instanceof Student)) {
-            JOptionPane.showMessageDialog(this, "未检测到登录学生信息，请重新登录！", "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No Login Student Info Detected, Please Login Again！", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -144,15 +144,15 @@ public class StudentSelectedCourseFrame extends JInternalFrame {
 
             // 6. 无已选课程时提示（友好交互）
             if (!hasData) {
-                JOptionPane.showMessageDialog(this, "暂无已选课程，可前往课程列表选课！", "提示", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "No Selected Courses Detected, Please Select Courses！", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
 
         } catch (Exception e) {
             // 异常处理：明确提示用户（如果报错“列 SELECT_DATE 不存在”，说明需要添加该字段）
             String errorMsg = e.getMessage().contains("SELECT_DATE") ?
-                    "加载已选课程失败！\n原因：student_courses表缺少select_date字段，请执行添加字段SQL！" :
-                    "加载已选课程失败！\n原因：" + e.getMessage();
-            JOptionPane.showMessageDialog(this, errorMsg, "错误", JOptionPane.ERROR_MESSAGE);
+                    "Load Selected Courses Failed！\nReason：student_courses table is missing select_date field, please execute add field SQL！" :
+                    "Load Selected Courses Failed！\nReason：" + e.getMessage();
+            JOptionPane.showMessageDialog(this, errorMsg, "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         } finally {
             // 7. 关闭数据库资源（使用工具类统一方法）
@@ -165,12 +165,12 @@ public class StudentSelectedCourseFrame extends JInternalFrame {
         // 1. 校验是否选中课程行
         int selectedRow = selectedCourseTable.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "请选中要退课的课程！", "提示", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please Select the Course to Drop！", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         // 2. 二次确认：避免误操作
-        int confirm = JOptionPane.showConfirmDialog(this, "确定要退选该课程吗？\n退课后不可恢复！", "确认退课", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(this, "Are You Sure to Drop the Selected Course？\nAfter Dropping, It Cannot Be Recovered！", "Confirm Drop Course", JOptionPane.YES_NO_OPTION);
         if (confirm != JOptionPane.YES_OPTION) {
             return;
         }
@@ -199,14 +199,14 @@ public class StudentSelectedCourseFrame extends JInternalFrame {
             // 6. 执行删除，判断影响行数
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
-                JOptionPane.showMessageDialog(this, "退课成功！", "成功", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Drop Course Success！", "Success", JOptionPane.INFORMATION_MESSAGE);
                 loadSelectedCourseData(); // 退课后刷新表格
             } else {
-                JOptionPane.showMessageDialog(this, "退课失败，未找到对应的选课记录！", "失败", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Drop Course Failed！\nReason：No Corresponding Selected Course Record Found！", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "退课异常！\n原因：" + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Drop Course Exception！\nReason：" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         } finally {
             DerbyDbUtil.closeAll(null, pstmt, conn);

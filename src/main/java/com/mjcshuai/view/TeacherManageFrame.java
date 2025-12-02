@@ -26,7 +26,7 @@ public class TeacherManageFrame extends JInternalFrame {
     private TeacherDAO teacherDAO = new TeacherDAOImpl();
 
     public TeacherManageFrame() {
-        super("教师管理", true, true, true, true);
+        super("Teacher Management", true, true, true, true);
         setSize(1000, 600);
         initTable();
         initButtons();
@@ -35,7 +35,7 @@ public class TeacherManageFrame extends JInternalFrame {
 
     // 初始化表格
     private void initTable() {
-        String[] columnNames = {"教师ID", "用户名", "性别", "职称", "年龄", "密码"};
+        String[] columnNames = {"Teacher ID", "Username", "Gender", "Title", "Age", "Password"};
         tableModel = new DefaultTableModel(null, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -52,10 +52,10 @@ public class TeacherManageFrame extends JInternalFrame {
     // 初始化操作按钮（实现完整功能）
     private void initButtons() {
         JPanel btnPanel = new JPanel();
-        JButton addBtn = new JButton("新增教师");
-        JButton editBtn = new JButton("编辑教师");
-        JButton deleteBtn = new JButton("删除教师");
-        JButton refreshBtn = new JButton("刷新数据");
+        JButton addBtn = new JButton("Add Teacher");
+        JButton editBtn = new JButton("Edit Teacher");
+        JButton deleteBtn = new JButton("Delete Teacher");
+        JButton refreshBtn = new JButton("Refresh Data");
 
         Dimension btnSize = new Dimension(120, 35);
         addBtn.setPreferredSize(btnSize);
@@ -76,19 +76,19 @@ public class TeacherManageFrame extends JInternalFrame {
                 JTextField ageField = new JTextField();
                 JTextField pwdField = new JTextField();
 
-                addPanel.add(new JLabel("用户名："));
+                addPanel.add(new JLabel("Username："));
                 addPanel.add(nameField);
-                addPanel.add(new JLabel("性别："));
+                addPanel.add(new JLabel("Gender："));
                 addPanel.add(sexField);
-                addPanel.add(new JLabel("职称："));
+                addPanel.add(new JLabel("Title："));
                 addPanel.add(titleField);
-                addPanel.add(new JLabel("年龄："));
+                addPanel.add(new JLabel("Age："));
                 addPanel.add(ageField);
-                addPanel.add(new JLabel("密码："));
+                addPanel.add(new JLabel("Password："));
                 addPanel.add(pwdField);
 
                 int result = JOptionPane.showConfirmDialog(TeacherManageFrame.this,
-                        addPanel, "新增教师", JOptionPane.OK_CANCEL_OPTION);
+                        addPanel, "Add Teacher", JOptionPane.OK_CANCEL_OPTION);
 
                 if (result == JOptionPane.OK_OPTION) {
                     // 输入验证
@@ -100,17 +100,17 @@ public class TeacherManageFrame extends JInternalFrame {
 
                     if (name.isEmpty() || pwd.isEmpty()) {
                         JOptionPane.showMessageDialog(TeacherManageFrame.this,
-                                "用户名和密码不能为空！", "错误", JOptionPane.ERROR_MESSAGE);
+                                "Username and Password cannot be empty！", "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
                     if (!ageStr.matches("\\d+") || Integer.parseInt(ageStr) < 18 || Integer.parseInt(ageStr) > 65) {
                         JOptionPane.showMessageDialog(TeacherManageFrame.this,
-                                "年龄必须是18-65之间的数字！", "错误", JOptionPane.ERROR_MESSAGE);
+                                "Age must be between 18 and 65！", "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
                     if (isUsernameExists(name)) {
                         JOptionPane.showMessageDialog(TeacherManageFrame.this,
-                                "用户名已存在！", "错误", JOptionPane.ERROR_MESSAGE);
+                                "Username already exists！", "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
 
@@ -126,11 +126,11 @@ public class TeacherManageFrame extends JInternalFrame {
                     boolean success = teacherDAO.addTeacher(newTeacher);
                     if (success) {
                         JOptionPane.showMessageDialog(TeacherManageFrame.this,
-                                "新增教师成功！", "成功", JOptionPane.INFORMATION_MESSAGE);
+                                "Add Teacher Successfully！", "Success", JOptionPane.INFORMATION_MESSAGE);
                         loadTeacherData(); // 刷新表格
                     } else {
                         JOptionPane.showMessageDialog(TeacherManageFrame.this,
-                                "新增教师失败！", "失败", JOptionPane.ERROR_MESSAGE);
+                                "Add Teacher Failed！", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -143,7 +143,7 @@ public class TeacherManageFrame extends JInternalFrame {
                 int selectedRow = teacherTable.getSelectedRow();
                 if (selectedRow == -1) {
                     JOptionPane.showMessageDialog(TeacherManageFrame.this,
-                            "请选择要编辑的教师！", "错误", JOptionPane.ERROR_MESSAGE);
+                            "Please select the teacher to edit！", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -165,19 +165,19 @@ public class TeacherManageFrame extends JInternalFrame {
                 JTextField ageField = new JTextField(oldAge.toString());
                 JTextField pwdField = new JTextField(oldPwd);
 
-                editPanel.add(new JLabel("用户名："));
+                editPanel.add(new JLabel("Username："));
                 editPanel.add(nameField);
-                editPanel.add(new JLabel("性别："));
+                editPanel.add(new JLabel("Sex："));
                 editPanel.add(sexField);
-                editPanel.add(new JLabel("职称："));
+                editPanel.add(new JLabel("Title："));
                 editPanel.add(titleField);
-                editPanel.add(new JLabel("年龄："));
+                editPanel.add(new JLabel("Age："));
                 editPanel.add(ageField);
-                editPanel.add(new JLabel("密码："));
+                editPanel.add(new JLabel("Password："));
                 editPanel.add(pwdField);
 
                 int result = JOptionPane.showConfirmDialog(TeacherManageFrame.this,
-                        editPanel, "编辑教师", JOptionPane.OK_CANCEL_OPTION);
+                        editPanel, "Edit Teacher", JOptionPane.OK_CANCEL_OPTION);
 
                 if (result == JOptionPane.OK_OPTION) {
                     // 输入验证
@@ -189,18 +189,18 @@ public class TeacherManageFrame extends JInternalFrame {
 
                     if (name.isEmpty() || pwd.isEmpty()) {
                         JOptionPane.showMessageDialog(TeacherManageFrame.this,
-                                "用户名和密码不能为空！", "错误", JOptionPane.ERROR_MESSAGE);
+                                "Username and password cannot be empty！", "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
                     if (!ageStr.matches("\\d+") || Integer.parseInt(ageStr) < 18 || Integer.parseInt(ageStr) > 65) {
                         JOptionPane.showMessageDialog(TeacherManageFrame.this,
-                                "年龄必须是18-65之间的数字！", "错误", JOptionPane.ERROR_MESSAGE);
+                                "Age must be between 18 and 65！", "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
                     // 验证用户名是否重复（排除当前教师）
                     if (!name.equals(oldName) && isUsernameExists(name)) {
                         JOptionPane.showMessageDialog(TeacherManageFrame.this,
-                                "用户名已存在！", "错误", JOptionPane.ERROR_MESSAGE);
+                                "Username already exists！", "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
 
@@ -217,11 +217,11 @@ public class TeacherManageFrame extends JInternalFrame {
                     boolean success = teacherDAO.updateTeacher(updatedTeacher);
                     if (success) {
                         JOptionPane.showMessageDialog(TeacherManageFrame.this,
-                                "编辑教师成功！", "成功", JOptionPane.INFORMATION_MESSAGE);
+                                "Edit teacher success！", "Success", JOptionPane.INFORMATION_MESSAGE);
                         loadTeacherData(); // 刷新表格
                     } else {
                         JOptionPane.showMessageDialog(TeacherManageFrame.this,
-                                "编辑教师失败！", "失败", JOptionPane.ERROR_MESSAGE);
+                                "Edit teacher failed！", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -234,7 +234,7 @@ public class TeacherManageFrame extends JInternalFrame {
                 int selectedRow = teacherTable.getSelectedRow();
                 if (selectedRow == -1) {
                     JOptionPane.showMessageDialog(TeacherManageFrame.this,
-                            "请选择要删除的教师！", "错误", JOptionPane.ERROR_MESSAGE);
+                            "Please select the teacher to delete！", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -242,19 +242,20 @@ public class TeacherManageFrame extends JInternalFrame {
                 String name = (String) tableModel.getValueAt(selectedRow, 1);
 
                 int confirm = JOptionPane.showConfirmDialog(TeacherManageFrame.this,
-                        "确定要删除教师【" + name + "】吗？\n删除后关联的课程将无法正常显示！",
-                        "确认删除", JOptionPane.YES_NO_OPTION);
+                        "Are you sure you want to delete teacher【" + name + "】？\n" +
+                                "After deletion, the associated courses will no longer be displayed！",
+                        "Confirm Delete", JOptionPane.YES_NO_OPTION);
 
                 if (confirm == JOptionPane.YES_OPTION) {
                     // 调用DAO删除
                     boolean success = teacherDAO.deleteTeacher(id);
                     if (success) {
                         JOptionPane.showMessageDialog(TeacherManageFrame.this,
-                                "删除教师成功！", "成功", JOptionPane.INFORMATION_MESSAGE);
+                                "Delete teacher success！", "Success", JOptionPane.INFORMATION_MESSAGE);
                         loadTeacherData(); // 刷新表格
                     } else {
                         JOptionPane.showMessageDialog(TeacherManageFrame.this,
-                                "删除教师失败（可能存在关联课程）！", "失败", JOptionPane.ERROR_MESSAGE);
+                                "Delete teacher failed（可能存在关联课程）！", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -288,13 +289,13 @@ public class TeacherManageFrame extends JInternalFrame {
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,
-                    "加载教师数据失败：" + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+                    "Load teacher data failed：" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     // 校验用户名是否已存在（新增/编辑时使用）
     private boolean isUsernameExists(String username) {
-        Connection conn = null;
+        //Connection conn = null;
         Connection DerbyConn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -302,7 +303,7 @@ public class TeacherManageFrame extends JInternalFrame {
             //conn = DbUtil.getConnection();
             DerbyConn = DerbyDbUtil.getConnection();
             //String sql = "SELECT id FROM teacher WHERE name = ?";
-            pstmt = conn.prepareStatement(DerbySQL.queryTeacNameById);
+            pstmt = DerbyConn.prepareStatement(DerbySQL.queryTeacNameById);
             pstmt.setString(1, username);
             rs = pstmt.executeQuery();
             return rs.next(); // 存在返回true

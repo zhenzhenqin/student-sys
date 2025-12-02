@@ -12,6 +12,7 @@ import com.mjcshuai.dao.impl.AdminDAOImpl;
 import com.mjcshuai.dao.impl.StudentDAOImpl;
 import com.mjcshuai.dao.impl.TeacherDAOImpl;
 import com.mjcshuai.util.UserContext;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +23,7 @@ import java.awt.event.KeyEvent;
 import java.net.URI;
 import java.net.URL;
 
+@Slf4j
 public class LoginFrame extends JFrame {
     private JRadioButton adminRadio;
     private JRadioButton teacherRadio;
@@ -36,7 +38,7 @@ public class LoginFrame extends JFrame {
 
     public LoginFrame() {
         // 窗口基本属性
-        setTitle("学生管理系统-登录");
+        setTitle("Student Management System - Login");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // 居中
@@ -59,9 +61,9 @@ public class LoginFrame extends JFrame {
 
         // 1. 角色选择区（单选按钮组）
         JPanel rolePanel = new JPanel();
-        adminRadio = new JRadioButton("管理员", true); // 默认选中
-        teacherRadio = new JRadioButton("教师");
-        studentRadio = new JRadioButton("学生");
+        adminRadio = new JRadioButton("Admin", true); // 默认选中
+        teacherRadio = new JRadioButton("Teacher");
+        studentRadio = new JRadioButton("Student");
         ButtonGroup roleGroup = new ButtonGroup();
         roleGroup.add(adminRadio);
         roleGroup.add(teacherRadio);
@@ -76,7 +78,7 @@ public class LoginFrame extends JFrame {
         mainPanel.add(rolePanel, gbc);
 
         // 2. 用户名输入区
-        JLabel usernameLabel = new JLabel("用户名:");
+        JLabel usernameLabel = new JLabel("Username:");
         usernameField = new JTextField(20);
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -86,7 +88,7 @@ public class LoginFrame extends JFrame {
         mainPanel.add(usernameField, gbc);
 
         // 3. 密码输入区
-        JLabel passwordLabel = new JLabel("密码:");
+        JLabel passwordLabel = new JLabel("Password:");
         passwordField = new JPasswordField(20);
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -95,7 +97,7 @@ public class LoginFrame extends JFrame {
         mainPanel.add(passwordField, gbc);
 
         // 4. 登录按钮
-        loginButton = new JButton("登录");
+        loginButton = new JButton("Login");
         loginButton.setFont(new Font("宋体", Font.PLAIN, 14));
         gbc.gridx = 0;
         gbc.gridy = 3;
@@ -113,7 +115,7 @@ public class LoginFrame extends JFrame {
 
         // 美化角色选择面板
         rolePanel.setBackground(new Color(250, 250, 250));
-        rolePanel.setBorder(BorderFactory.createTitledBorder("登录角色"));
+        rolePanel.setBorder(BorderFactory.createTitledBorder("Login Role"));
 
         // 美化输入框
         usernameField.setPreferredSize(new Dimension(200, 30));
@@ -174,7 +176,7 @@ public class LoginFrame extends JFrame {
                 // 空值校验
                 if (username.isEmpty() || password.isEmpty()) {
                     JOptionPane.showMessageDialog(LoginFrame.this,
-                            "用户名和密码不能为空！", "输入错误", JOptionPane.ERROR_MESSAGE);
+                            "Username and password cannot be empty!", "Input Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -205,7 +207,7 @@ public class LoginFrame extends JFrame {
                 // 登录结果反馈
                 if (loginSuccess) {
                     JOptionPane.showMessageDialog(LoginFrame.this,
-                            "登录成功！欢迎" + roleName + "：" + username, "成功", JOptionPane.INFORMATION_MESSAGE);
+                            "Login successful! Welcome " + roleName + "：" + username, "Success", JOptionPane.INFORMATION_MESSAGE);
                     // 初始化用户上下文
                     UserContext userContext = UserContext.getInstance();
                     if (adminRadio.isSelected()) {
@@ -220,7 +222,7 @@ public class LoginFrame extends JFrame {
                     dispose();
                     new MainFrame().setVisible(true);
                 } else {
-                    JOptionPane.showMessageDialog(LoginFrame.this, "输入的账户或密码有错误哦！", "失败", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(LoginFrame.this, "Username or password is incorrect!", "Failure", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

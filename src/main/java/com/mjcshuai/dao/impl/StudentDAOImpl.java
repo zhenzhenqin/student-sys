@@ -5,6 +5,8 @@ import com.mjcshuai.dao.StudentDAO;
 import com.mjcshuai.constant.DerbySQL;
 //import com.mjcshuai.util.DbUtil;
 import com.mjcshuai.util.DerbyDbUtil;
+import lombok.extern.slf4j.Slf4j;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,6 +19,7 @@ import java.util.List;
  * @author mjc
  * @date 2025/11/29
  */
+@Slf4j
 public class StudentDAOImpl implements StudentDAO {
 
     /**
@@ -53,7 +56,7 @@ public class StudentDAOImpl implements StudentDAO {
                 student.setPassword(rs.getString("password"));
             }
         } catch (SQLException e) {
-            System.err.println("学生登录查询异常: " + e.getMessage());
+            log.error("Student login query error: " + e.getMessage());
             e.printStackTrace();
         } finally {
             //DbUtil.closeAll(conn, pstmt, rs);
@@ -91,8 +94,7 @@ public class StudentDAOImpl implements StudentDAO {
                 studentList.add(student);
             }
         } catch (SQLException e) {
-            System.err.println("查询所有学生异常: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Query all student exceptions: " + e.getMessage());
         } finally {
             //DbUtil.closeAll(conn, pstmt, rs);
             DerbyDbUtil.closeAll(rs,pstmt, DerbyConn);
@@ -121,8 +123,7 @@ public class StudentDAOImpl implements StudentDAO {
             pstmt.setString(4, student.getPassword());
             return pstmt.executeUpdate() > 0; // 执行成功返回true
         } catch (SQLException e) {
-            System.err.println("新增学生异常: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Add student exception: " + e.getMessage());
             return false;
         } finally {
             //DbUtil.closeAll(conn, pstmt, null);
@@ -152,8 +153,7 @@ public class StudentDAOImpl implements StudentDAO {
             pstmt.setInt(5, student.getId());
             return pstmt.executeUpdate() > 0; // 执行成功返回true
         } catch (SQLException e) {
-            System.err.println("更新学生异常: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Update student exception: " + e.getMessage());
             return false;
         } finally {
             //DbUtil.closeAll(conn, pstmt, null);
@@ -179,8 +179,7 @@ public class StudentDAOImpl implements StudentDAO {
             pstmt.setInt(1, id);
             return pstmt.executeUpdate() > 0; // 执行成功返回true
         } catch (SQLException e) {
-            System.err.println("删除学生异常: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Delete student exception: " + e.getMessage());
             return false;
         } finally {
             //DbUtil.closeAll(conn, pstmt, null);

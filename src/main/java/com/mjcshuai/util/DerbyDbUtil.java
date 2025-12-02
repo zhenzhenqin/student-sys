@@ -1,6 +1,7 @@
 package com.mjcshuai.util;
 
 import com.mjcshuai.constant.DbProperties;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,6 +13,7 @@ import java.sql.*;
 /**
  * Apache Derby 数据库工具类（嵌入式模式）
  */
+@Slf4j
 public class DerbyDbUtil {
     // 1. Derby 嵌入式驱动（无需启动服务）
     private static final String DRIVER = DbProperties.Derby_DRIVER;
@@ -29,7 +31,7 @@ public class DerbyDbUtil {
             initDatabase();
             //System.out.println("Derby 驱动加载成功！");
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Derby 驱动加载失败！请检查依赖是否正确", e);
+            throw new RuntimeException("Derby driver failed to load! Please check if the dependencies are correct.", e);
         }
     }
 
@@ -63,12 +65,12 @@ public class DerbyDbUtil {
                 return;
             }
 
-            System.out.println("检测到空数据库，开始执行初始化脚本...");
+            log.info("Empty database detected, starting to execute initialization script...");
             executeSqlScript(conn, DbProperties.SQL_FILE_PATH);
-            System.out.println("数据库初始化完成！");
+            log.info("Database initialization completed successfully!");
 
         } catch (SQLException e) {
-            System.err.println("数据库初始化检查失败：" + e.getMessage());
+            log.error("Database initialization check failed: " + e.getMessage(), e);
         } finally {
             closeAll(rs, null, conn);
         }
@@ -82,7 +84,7 @@ public class DerbyDbUtil {
     private static void executeSqlScript(Connection conn, String filePath) {
         File sqlFile = new File(filePath);
         if (!sqlFile.exists()) {
-            System.err.println("警告：找不到初始化SQL文件: " + sqlFile.getAbsolutePath());
+            log.warn("Warning: Initialization SQL file not found: " + sqlFile.getAbsolutePath());
             return;
         }
 
@@ -128,19 +130,18 @@ public class DerbyDbUtil {
             conn.commit(); // 提交事务
 
         } catch (Exception e) {
-            System.err.println("SQL脚本执行出错：" + e.getMessage());
-            e.printStackTrace();
+            log.error("Error executing SQL script: " + e.getMessage(), e);
             try {
                 conn.rollback(); // 出错回滚
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                log.error("Transaction rollback failed: " + ex.getMessage(), ex);
             }
         } finally {
             try {
                 if (stmt != null) stmt.close();
                 conn.setAutoCommit(true); // 恢复自动提交
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("Failed to restore auto-commit: " + e.getMessage(), e);
             }
         }
     }
@@ -172,8 +173,7 @@ public class DerbyDbUtil {
             if ("XJ015".equals(e.getSQLState())) {
                 //System.out.println("Derby 数据库正常关闭！");
             } else {
-                System.err.println("Derby 关闭异常：" + e.getMessage());
-                e.printStackTrace();
+                log.error("Derby shutdown exception: " + e.getMessage(), e);
             }
         }
     }

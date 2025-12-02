@@ -1,6 +1,7 @@
 package com.mjcshuai.util;
 
 import com.mjcshuai.App;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,6 +13,7 @@ import java.net.URL;
  * author: mjc
  * createTime: 2025-11-30
  */
+@Slf4j
 public class AppIconUtil {
 
     //全局图标
@@ -27,7 +29,7 @@ public class AppIconUtil {
                 appIcon = new ImageIcon(iconUrl).getImage();
             }
         } catch (Exception e) {
-            System.err.println("无法加载应用程序图标: " + e.getMessage());
+            log.error("Unable to load the application icon: " + e.getMessage());
         }
         return appIcon;
     }

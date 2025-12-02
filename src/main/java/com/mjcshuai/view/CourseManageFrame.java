@@ -30,11 +30,11 @@ public class CourseManageFrame extends JInternalFrame {
     private CourseDAO courseDAO = new CourseDAOImpl();
 
     // 表格列名（与数据库字段对应）
-    private String[] columnNames = {"课程ID", "课程名称", "学分", "课时", "课程描述", "主讲教师"};
+    private String[] columnNames = {"Course ID", "Course Name", "Credit", "Hours", "Course Description", "Teacher"};
 
     public CourseManageFrame() {
         // 窗口基础配置
-        super("所有课程列表", true, true, true, true);
+        super("All Courses List", true, true, true, true);
         setSize(900, 600);
 
 
@@ -69,11 +69,11 @@ public class CourseManageFrame extends JInternalFrame {
         courseTable.getColumnModel().getColumn(5).setPreferredWidth(120); // 主讲教师
 
         // 初始化所有按钮（按角色控制显示/隐藏）
-        addBtn = new JButton("新增课程");
-        editBtn = new JButton("修改课程");
-        deleteBtn = new JButton("删除课程");
-        refreshBtn = new JButton("刷新列表");
-        selectCourseBtn = new JButton("选课"); // 学生专属按钮
+        addBtn = new JButton("Add Course");
+        editBtn = new JButton("Edit Course");
+        deleteBtn = new JButton("Delete Course");
+        refreshBtn = new JButton("Refresh List");
+        selectCourseBtn = new JButton("Select Course"); // 学生专属按钮
 
         // 按钮样式统一
         JButton[] allButtons = {addBtn, editBtn, deleteBtn, refreshBtn, selectCourseBtn};
@@ -126,7 +126,7 @@ public class CourseManageFrame extends JInternalFrame {
         // 公共事件（刷新）
         refreshBtn.addActionListener(e -> {
             loadCourseData();
-            JOptionPane.showMessageDialog(this, "刷新成功！", "提示", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Refresh Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
         });
     }
 
@@ -149,7 +149,7 @@ public class CourseManageFrame extends JInternalFrame {
                 tableModel.addRow(rowData);
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "加载课程失败！\n" + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Load Courses Failed!\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
@@ -162,7 +162,7 @@ public class CourseManageFrame extends JInternalFrame {
     private void editCourse() {
         int selectedRow = courseTable.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "请选中要修改的课程！", "提示", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select the course to edit!", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -182,11 +182,11 @@ public class CourseManageFrame extends JInternalFrame {
     private void deleteCourse() {
         int selectedRow = courseTable.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "请选中要删除的课程！", "提示", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select the course to delete!", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        int confirm = JOptionPane.showConfirmDialog(this, "确定要删除该课程吗？\n删除后不可恢复！", "确认删除", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this course?\nThis action cannot be undone!", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
         if (confirm != JOptionPane.YES_OPTION) {
             return;
         }
@@ -196,13 +196,13 @@ public class CourseManageFrame extends JInternalFrame {
         try {
             boolean success = courseDAO.deleteCourseById(courseId);
             if (success) {
-                JOptionPane.showMessageDialog(this, "课程删除成功！", "成功", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Course Deleted Successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 loadCourseData();
             } else {
-                JOptionPane.showMessageDialog(this, "课程删除失败！", "失败", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Course Deletion Failed!\n", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "删除课程异常！\n" + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Course Deletion Exception!\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
@@ -220,7 +220,7 @@ public class CourseManageFrame extends JInternalFrame {
 
         public CourseFormDialog(Map<String, Object> courseData) {
             super((Frame) CourseManageFrame.this.getTopLevelAncestor(),
-                    courseData == null ? "新增课程" : "修改课程",
+                    courseData == null ? "Add New Course" : "Edit Course",
                     true); // 模态窗口
 
             // 弹窗基础配置
@@ -247,27 +247,27 @@ public class CourseManageFrame extends JInternalFrame {
 
             // 2. 组件初始化
             // 课程名称
-            formPanel.add(new JLabel("课程名称*："));
+            formPanel.add(new JLabel("Course Name*："));
             nameField = new JTextField();
             formPanel.add(nameField);
 
             // 学分
-            formPanel.add(new JLabel("学分*："));
+            formPanel.add(new JLabel("Credit*："));
             creditField = new JTextField();
             formPanel.add(creditField);
 
             // 课时
-            formPanel.add(new JLabel("课时*："));
+            formPanel.add(new JLabel("Class Hours*："));
             hoursField = new JTextField();
             formPanel.add(hoursField);
 
             // 课程描述
-            formPanel.add(new JLabel("课程描述："));
+            formPanel.add(new JLabel("Course Description："));
             descField = new JTextField();
             formPanel.add(descField);
 
             // 主讲教师（下拉框：加载所有教师）
-            formPanel.add(new JLabel("主讲教师："));
+            formPanel.add(new JLabel("Primary Teacher："));
             teacherCombo = new JComboBox<>();
             loadTeachersToCombo(); // 加载教师数据到下拉框
             formPanel.add(teacherCombo);
@@ -280,13 +280,13 @@ public class CourseManageFrame extends JInternalFrame {
                 descField.setText((String) courseData.get("course_desc"));
                 // 选中原有教师
                 String teacherName = (String) courseData.get("teacher_name");
-                teacherCombo.setSelectedItem(teacherName.equals("无") ? "无教师" : teacherName);
+                teacherCombo.setSelectedItem(teacherName.equals("无") ? "no teacher" : teacherName);
             }
 
             // 4. 确认/取消按钮
             JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
-            confirmBtn = new JButton("确认");
-            cancelBtn = new JButton("取消");
+            confirmBtn = new JButton("Confirm");
+            cancelBtn = new JButton("Cancel");
             confirmBtn.setPreferredSize(new Dimension(80, 30));
             cancelBtn.setPreferredSize(new Dimension(80, 30));
             btnPanel.add(confirmBtn);
@@ -310,8 +310,8 @@ public class CourseManageFrame extends JInternalFrame {
                 rs = pstmt.executeQuery();
 
                 // 先添加“无教师”选项（对应teacher_id=null）
-                teacherMap.put("无教师", null);
-                teacherCombo.addItem("无教师");
+                teacherMap.put("no teacher", null);
+                teacherCombo.addItem("no teacher");
 
                 // 加载数据库中的教师
                 while (rs.next()) {
@@ -321,7 +321,7 @@ public class CourseManageFrame extends JInternalFrame {
                     teacherCombo.addItem(teacherName);
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "加载教师列表失败！", "错误", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Load teacher list failed！", "Error", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             } finally {
                 DerbyDbUtil.closeAll(rs, pstmt, conn);
@@ -353,7 +353,7 @@ public class CourseManageFrame extends JInternalFrame {
 
             // 1. 课程名称非空
             if (name.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "课程名称不能为空！", "校验失败", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Course name cannot be empty！", "Validation Failed", JOptionPane.WARNING_MESSAGE);
                 nameField.requestFocus(); // 焦点定位到名称输入框
                 return false;
             }
@@ -362,12 +362,12 @@ public class CourseManageFrame extends JInternalFrame {
             try {
                 BigDecimal credit = new BigDecimal(creditStr);
                 if (credit.compareTo(BigDecimal.ZERO) <= 0) {
-                    JOptionPane.showMessageDialog(this, "学分必须大于0！", "校验失败", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Credit must be greater than 0！", "Validation Failed", JOptionPane.WARNING_MESSAGE);
                     creditField.requestFocus();
                     return false;
                 }
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "学分必须是有效数字！", "校验失败", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Credit must be a valid number！", "Validation Failed", JOptionPane.WARNING_MESSAGE);
                 creditField.requestFocus();
                 return false;
             }
@@ -376,12 +376,12 @@ public class CourseManageFrame extends JInternalFrame {
             try {
                 int hours = Integer.parseInt(hoursStr);
                 if (hours <= 0) {
-                    JOptionPane.showMessageDialog(this, "课时必须大于0！", "校验失败", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Class hours must be greater than 0！", "Validation Failed", JOptionPane.WARNING_MESSAGE);
                     hoursField.requestFocus();
                     return false;
                 }
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "课时必须是整数！", "校验失败", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Class hours must be an integer！", "Validation Failed", JOptionPane.WARNING_MESSAGE);
                 hoursField.requestFocus();
                 return false;
             }
@@ -408,17 +408,17 @@ public class CourseManageFrame extends JInternalFrame {
                     if (teacherId != null) {
                         boolean success = courseDAO.insertTeacherCourse(teacherId, generatedCourseId, "2025-2026", 2025);
                         if (!success) {
-                            JOptionPane.showMessageDialog(this, "新增课程部分成功，教师关联失败！", "警告", JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.showMessageDialog(this, "Add course partially failed, teacher association failed！", "Warning", JOptionPane.WARNING_MESSAGE);
                         }
                     }
-                    JOptionPane.showMessageDialog(this, "新增课程成功！", "成功", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Add course successfully！", "Success", JOptionPane.INFORMATION_MESSAGE);
                     dispose();
                     loadCourseData();
                 } else {
-                    JOptionPane.showMessageDialog(this, "新增课程失败！", "失败", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Add course failed！", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "新增课程异常！\n" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Add course exception！\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
             }
         }
@@ -435,14 +435,14 @@ public class CourseManageFrame extends JInternalFrame {
             try {
                 boolean success = courseDAO.updateCourse(courseId, name, credit, hours, desc, teacherId);
                 if (success) {
-                    JOptionPane.showMessageDialog(this, "修改课程成功！", "成功", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Update course successfully！", "Success", JOptionPane.INFORMATION_MESSAGE);
                     dispose();
                     loadCourseData();
                 } else {
-                    JOptionPane.showMessageDialog(this, "修改课程失败！", "失败", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Update course failed！", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "修改课程异常！\n" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Update course exception！\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
             }
         }
@@ -453,7 +453,7 @@ public class CourseManageFrame extends JInternalFrame {
         // 1. 校验是否选中课程
         int selectedRow = courseTable.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "请选中要选的课程！", "提示", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select a course to select！", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -468,29 +468,29 @@ public class CourseManageFrame extends JInternalFrame {
 
         try {
             if (courseDAO.isCourseSelectedByStudent(studentId, courseId)) {
-                JOptionPane.showMessageDialog(this, "你已选过「" + courseName + "」，不可重复选课！", "提示", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "You have already selected「" + courseName + "」, cannot select again！", "Warning", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             Integer teacherCourseId = courseDAO.getFirstTeacherCourseId(courseId);
             if (teacherCourseId == null) {
-                JOptionPane.showMessageDialog(this, "「" + courseName + "」暂无授课记录，无法选课！", "失败", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "「" + courseName + "」暂未授课，无法选课！", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            int confirm = JOptionPane.showConfirmDialog(this, "确定要选「" + courseName + "」吗？", "确认选课", JOptionPane.YES_NO_OPTION);
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to select「" + courseName + "」？", "Confirm Selection", JOptionPane.YES_NO_OPTION);
             if (confirm != JOptionPane.YES_OPTION) {
                 return;
             }
 
             boolean success = courseDAO.insertStudentCourse(studentId, teacherCourseId, getCurrentTime());
             if (success) {
-                JOptionPane.showMessageDialog(this, "选课成功！可前往「已选课程」查看", "成功", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Course selection successful！You can view it in the「Selected Courses」section.", "Success", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(this, "选课失败！", "失败", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Course selection failed！", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "选课异常！\n" + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Course selection exception！\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }

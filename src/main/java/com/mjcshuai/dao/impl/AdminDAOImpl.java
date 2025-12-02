@@ -5,6 +5,7 @@ import com.mjcshuai.dao.AdminDAO;
 import com.mjcshuai.constant.DerbySQL;
 //import com.mjcshuai.util.DbUtil;
 import com.mjcshuai.util.DerbyDbUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,6 +17,7 @@ import java.sql.SQLException;
  * @author mjc
  * @date 2025/11/29
  */
+@Slf4j
 public class AdminDAOImpl implements AdminDAO {
 
     /**
@@ -55,8 +57,7 @@ public class AdminDAOImpl implements AdminDAO {
                 //admin.setCreateDate(rs.getString("createDate"));
             }
         } catch (SQLException e) {
-            System.err.println("管理员登录查询异常: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Administrator login query exception: " + e.getMessage());
         } finally {
             // 调用静态方法关闭所有资源
             //DbUtil.closeAll(conn, pstmt, rs);
