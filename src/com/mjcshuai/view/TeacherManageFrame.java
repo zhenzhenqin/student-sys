@@ -294,7 +294,7 @@ public class TeacherManageFrame extends JInternalFrame {
 
     // 校验用户名是否已存在（新增/编辑时使用）
     private boolean isUsernameExists(String username) {
-        Connection conn = null;
+        //Connection conn = null;
         Connection DerbyConn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -302,7 +302,7 @@ public class TeacherManageFrame extends JInternalFrame {
             //conn = DbUtil.getConnection();
             DerbyConn = DerbyDbUtil.getConnection();
             //String sql = "SELECT id FROM teacher WHERE name = ?";
-            pstmt = conn.prepareStatement(DerbySQL.queryTeacNameById);
+            pstmt = DerbyConn.prepareStatement(DerbySQL.queryTeacNameById);
             pstmt.setString(1, username);
             rs = pstmt.executeQuery();
             return rs.next(); // 存在返回true
